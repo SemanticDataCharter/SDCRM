@@ -2830,16 +2830,16 @@
           </xsd:appinfo>
         </xsd:annotation>
       </xsd:element>
-      <xsd:element maxOccurs="1" minOccurs="0" name="workflow" type="sdc4:XdLinkType">
+      <xsd:element maxOccurs="1" minOccurs="0" name="workflow" type="sdc4:ClusterType">
         <xsd:annotation>
-          <xsd:documentation xml:lang="en-us">Identifier of externally held workflow engine (state machine) data for this workflow execution.</xsd:documentation>
+          <xsd:documentation xml:lang="en-us">Workflow definition for this data model, containing state definitions, transitions, and execution logic as a structured Cluster.</xsd:documentation>
           <xsd:appinfo>
             <rdf:Description rdf:about="https://semanticdatacharter.com/ns/sdc4/sdc4.xsd#DMType/workflow">
               <rdfs:domain rdf:resource="https://semanticdatacharter.com/ns/sdc4/sdc4.xsd#DMType"/>
-              <rdfs:range rdf:resource="https://semanticdatacharter.com/ns/sdc4/sdc4.xsd#XdLinkType"/>
-              <rdfs:label xml:lang="en-us">workflow</rdfs:label>                  
-              <rdf:type rdf:resource="https://semanticdatacharter.com/ns/sdc4/sdc4.xsd#XdLinkType"/>                  
-              <rdfs:comment xml:lang="en-us">Identifier of externally held workflow engine (state machine) data for this workflow execution.</rdfs:comment>
+              <rdfs:range rdf:resource="https://semanticdatacharter.com/ns/sdc4/sdc4.xsd#ClusterType"/>
+              <rdfs:label xml:lang="en-us">workflow</rdfs:label>
+              <rdf:type rdf:resource="https://semanticdatacharter.com/ns/sdc4/sdc4.xsd#ClusterType"/>
+              <rdfs:comment xml:lang="en-us">Workflow definition for this data model, containing state definitions, transitions, and execution logic as a structured Cluster.</rdfs:comment>
             </rdf:Description>
           </xsd:appinfo>
         </xsd:annotation>
