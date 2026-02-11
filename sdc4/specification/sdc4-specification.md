@@ -125,9 +125,66 @@ A critical distinction exists between the metadata for a *data instance* and the
 
 #### **4.3.1. The DMType as an Instance Wrapper**
 
-The DMType serves as the root element for every SDC data instance. Its primary role is to be a container for the data payload and the provenance and governance metadata of that *specific instance*. The elements within the DMType, such as instance\_id, creation\_timestamp, provider, and subject, describe the "who, what, when, and where" of the data payload itself, not the abstract model it conforms to.
+The DMType serves as the root element for every SDC data instance. Its primary role is to be a container for the data payload and the provenance and governance metadata of that *specific instance*. The elements within the DMType describe the "who, what, when, and where" of the data payload itself, not the abstract model it conforms to.
 
-#### 
+**Complete DMType Element Listing:**
+
+| Element | Type | Cardinality | Description |
+|---------|------|-------------|-------------|
+| dm-label | xsd:string | 1..1 | Descriptive name of this data model. Provides the semantic 'name' for the model. |
+| dm-language | xsd:language | 1..1 | Mandatory indicator of the localized language (RFC 3066). |
+| dm-encoding | xsd:string | 1..1 | Character set encoding. Default is utf-8. |
+| creation\_timestamp | xsd:dateTime | 0..1 | Run-time timestamp indicating when this data instance was created. |
+| instance\_id | xsd:string | 0..1 | Globally unique identifier for this data instance (UUID recommended). |
+| instance\_version | xsd:string | 0..1 | Version identifier for this data instance. |
+| current-state | xsd:string | 0..1 | The current state according to the workflow defined in the workflow element. |
+| data | ItemType (ref) | 1..1 | The data structure of the model (substitution group: Item). |
+| subject | PartyType | 0..1 | Identity of the human subject of the data (patient, customer, etc.). |
+| provider | PartyType | 0..* | Source of the information (clinician, device, software, etc.). |
+| participations | ParticipationType (ref) | 0..* | Other participations in the data activity. |
+| protocol | XdStringType | 0..1 | External identifier of the protocol used when collecting the data. |
+| workflow | ClusterType | 0..1 | Workflow definition for this data model, containing state definitions, transitions, and execution logic. |
+| acs | XdLinkType | 0..1 | Identifier of an externally held access control system. |
+| audit | AuditType (ref) | 0..* | Audit trail entries from systems that have interacted with the data. |
+| attestation | AttestationType | 0..1 | Attestation record verifying the data instance. |
+| links | XdLinkType (ref) | 0..* | Optional links to other locatable structures or external entities. |
+
+#### **4.3.1.1. Workflow and State Machine Capabilities**
+
+The `current-state`, `workflow`, and `xsd:assert` elements work together to give every SDC4 data instance the ability to carry its own state machine definition. This creates a **smart packet** — a data instance that embeds its own behavioral rules alongside its structural definition.
+
+**current-state**: Holds the active state value of the instance. At the RM level, this is an unrestricted `xsd:string` to allow each Data Model to define its own state vocabulary. Valid values are constrained per-DM using `xsd:assert` elements in the generated schema.
+
+**workflow**: Typed as `ClusterType`, this element can contain arbitrarily complex workflow definitions using nested Clusters and any Xd\* type. Common patterns include:
+
+* **State definitions**: XdString elements with fixed values listing valid states.
+* **Transition rules**: Nested Clusters containing from-state, to-state, and guard conditions.
+* **Hierarchical plans**: Nested Cluster trees for multi-phase workflows.
+* **External engine references**: XdLink elements pointing to external BPMN or workflow engines.
+
+**xsd:assert**: XSD 1.1 assertions placed within the DM's complexType definition enforce state constraints at schema validation time. Assertions use XPath 2.0 expressions evaluated against the DM instance.
+
+Example — a DM with workflow state validation:
+
+```xml
+<dm-h7k2x xmlns:sdc4="https://semanticdatacharter.com/ns/sdc4/">
+  <sdc4:dm-label>Patient Intake</sdc4:dm-label>
+  <sdc4:dm-language>en-US</sdc4:dm-language>
+  <sdc4:dm-encoding>utf-8</sdc4:dm-encoding>
+  <sdc4:current-state>Triage</sdc4:current-state>
+  <sdc4:ms-clj5x1g8f000008l09j7f6c3d>
+    <!-- data payload -->
+  </sdc4:ms-clj5x1g8f000008l09j7f6c3d>
+  <sdc4:workflow>
+    <sdc4:label>Intake Workflow</sdc4:label>
+    <!-- Cluster containing state and transition definitions -->
+  </sdc4:workflow>
+</dm-h7k2x>
+```
+
+For comprehensive guidance on workflow patterns, see the **Workflow & State Machine Guide** (`sdc4/guides/workflow-state-machine.md`).
+
+####
 
 #### **4.3.2. Semantic Grounding of the Data Model Definition**
 
