@@ -18,9 +18,9 @@
   <sdc4:dm-encoding>UTF-8</sdc4:dm-encoding>
 
   <!-- Metadatos de la instancia -->
-  <sdc4:instance-id>inst-clj5x9z8a000108l0abc123es</sdc4:instance-id>
-  <sdc4:instance-version>1</sdc4:instance-version>
-  <sdc4:creation-timestamp>2025-10-19T14:30:00-06:00</sdc4:creation-timestamp>
+  <sdc4:instance_id>inst-clj5x9z8a000108l0abc123es</sdc4:instance_id>
+  <sdc4:instance_version>1</sdc4:instance_version>
+  <sdc4:creation_timestamp>2025-10-19T14:30:00-06:00</sdc4:creation_timestamp>
 
   <!-- Proveedor (Hospital) -->
   <sdc4:provider>
