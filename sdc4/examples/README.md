@@ -52,6 +52,10 @@ for f in **/*.xml; do
 done
 ```
 
+## Mandatory instance_id
+
+As of the Beale-Sovereignty update, every SDC4 data instance **must** include an `instance_id` element. The SDC ecosystem uses CUID2 identifiers. New examples must include this element.
+
 ## Example Structure
 
 Each example typically includes:

@@ -112,7 +112,7 @@ Governance components define the actors, roles, and responsibilities associated 
 
 Provenance components provide a complete history of the data's origin, creation, and modification.
 
-* **Instance Metadata**: The root DMType contains key provenance fields: instance\_id, instance\_version, creation\_timestamp, subject, and provider.  
+* **Instance Metadata**: The root DMType contains key provenance fields: instance\_id (mandatory, CUID2), instance\_version, source\_instance\_id, source\_version\_id, creation\_timestamp, subject, and provider.  
 * **Temporal Validity**: Every data element (XdAnyType) contains optional timestamp fields to track its lifecycle: vtb (Valid Time Begin), vte (Valid Time End), tr (Time Recorded), and modified.
 
 ### 
@@ -135,8 +135,10 @@ The DMType serves as the root element for every SDC data instance. Its primary r
 | dm-language | xsd:language | 1..1 | Mandatory indicator of the localized language (RFC 3066). |
 | dm-encoding | xsd:string | 1..1 | Character set encoding. Default is utf-8. |
 | creation\_timestamp | xsd:dateTime | 0..1 | Run-time timestamp indicating when this data instance was created. |
-| instance\_id | xsd:string | 0..1 | Globally unique identifier for this data instance (UUID recommended). |
+| instance\_id | xsd:string | 1..1 | Mandatory, globally unique identifier for this data instance (CUID2). |
 | instance\_version | xsd:string | 0..1 | Version identifier for this data instance. |
+| source\_instance\_id | xsd:string | 0..1 | Identifier of this data instance in the originating source system (e.g., Epic, SAP). Enables auditable data lineage across system boundaries. |
+| source\_version\_id | xsd:string | 0..1 | Version identifier from the originating source system. Paired with source\_instance\_id, provides a complete reference to the exact upstream version ingested. |
 | current-state | xsd:string | 0..1 | The current state according to the workflow defined in the workflow element. |
 | data | ItemType (ref) | 1..1 | The data structure of the model (substitution group: Item). |
 | subject | PartyType | 0..1 | Identity of the human subject of the data (patient, customer, etc.). |

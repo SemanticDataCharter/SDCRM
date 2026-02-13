@@ -690,11 +690,11 @@ Descriptive name of this datatype model. Provides the semantic &apos;name&apos; 
     <owl:DatatypeProperty rdf:about="https://semanticdatacharter.com/ns/sdc4/instance_id">
         <rdfs:domain rdf:resource="https://semanticdatacharter.com/ns/sdc4/DMType"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-        <rdfs:comment>An optional, globally unique identifier for this specific data instance. It is strongly recommended to use a UUID (Universally Unique Identifier).
-            This ID provides a persistent identity for the data that is decoupled from any storage or transport mechanism (e.g., filename, database primary key). 
+        <rdfs:comment>A mandatory, globally unique identifier for this specific data instance. The SDC ecosystem uses CUID2 identifiers.
+            This ID provides a persistent identity for the data that is decoupled from any storage or transport mechanism (e.g., filename, database primary key).
             It is essential for reliably tracking, updating, and referencing data in distributed systems, message queues, and data aggregation platforms.</rdfs:comment>
     </owl:DatatypeProperty>
-    
+
 
 
     <!-- https://semanticdatacharter.com/ns/sdc4/instance_version -->
@@ -702,9 +702,32 @@ Descriptive name of this datatype model. Provides the semantic &apos;name&apos; 
     <owl:DatatypeProperty rdf:about="https://semanticdatacharter.com/ns/sdc4/instance_version">
         <rdfs:domain rdf:resource="https://semanticdatacharter.com/ns/sdc4/DMType"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-        <rdfs:comment>An optional identifier for the specific version of this data instance. 
+        <rdfs:comment>An optional identifier for the specific version of this data instance.
             When paired with instance_id, it allows for a complete version history of a single data record.
             The type is a string to accommodate various versioning schemes, such as simple integers (&apos;1&apos;, &apos;2&apos;), semantic versioning (&apos;1.2.1&apos;), or timestamps.</rdfs:comment>
+    </owl:DatatypeProperty>
+
+
+
+    <!-- https://semanticdatacharter.com/ns/sdc4/source_instance_id -->
+
+    <owl:DatatypeProperty rdf:about="https://semanticdatacharter.com/ns/sdc4/source_instance_id">
+        <rdfs:domain rdf:resource="https://semanticdatacharter.com/ns/sdc4/DMType"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:comment>The identifier of the data instance in the originating source system (e.g., Epic, SAP).
+            Preserving the upstream identity enables auditable data lineage across system boundaries.</rdfs:comment>
+    </owl:DatatypeProperty>
+
+
+
+    <!-- https://semanticdatacharter.com/ns/sdc4/source_version_id -->
+
+    <owl:DatatypeProperty rdf:about="https://semanticdatacharter.com/ns/sdc4/source_version_id">
+        <rdfs:domain rdf:resource="https://semanticdatacharter.com/ns/sdc4/DMType"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:comment>The version identifier of the data as it existed in the originating source system.
+            When paired with source_instance_id, provides a complete reference to the exact
+            upstream version that was ingested or transformed into this SDC data instance.</rdfs:comment>
     </owl:DatatypeProperty>
     
 

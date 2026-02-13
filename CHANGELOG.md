@@ -15,6 +15,24 @@ The MAJOR version represents the SDC generation (4 = SDC4).
 
 ---
 
+## [4.0.0] - Beale-Sovereignty Update (February 2026)
+
+### Changed
+
+**Sovereign Identity & Source Provenance (Beale-Sovereignty)**
+- `instance_id` changed from optional (`minOccurs="0"`) to **mandatory** (`minOccurs="1"`) in DMType
+- `instance_id` description updated: UUID recommendation replaced with **CUID2** as the SDC ecosystem standard
+- Added `source_instance_id` element to DMType — preserves the upstream identifier from the originating source system
+- Added `source_version_id` element to DMType — preserves the upstream version, paired with source_instance_id for complete lineage
+- Updated `sdc4.owl` — instance_id property description reflects mandatory/CUID2; added source_instance_id and source_version_id DatatypeProperty definitions
+- Updated `sdc4-meta.owl` — added NamedIndividual declarations, ClassAssertions, ObjectPropertyAssertions, and AnnotationAssertions for both new fields; added SourceInstanceIdentifier and SourceVersionIdentifier ConceptualAspect individuals
+- Updated specification cardinality table and provenance description
+- Injected mandatory instance_id into basic XML examples (patient-record.xml, product-catalog.xml)
+
+*This is a retcon (no version bump, no namespace change) to enforce sovereign data identity from the outset.*
+
+---
+
 ## [4.0.0] - 2025-10-20
 
 ### Added - Initial SDC4 Release

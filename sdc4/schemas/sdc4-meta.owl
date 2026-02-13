@@ -433,6 +433,12 @@
         <NamedIndividual IRI="InstanceVersion"/>
     </Declaration>
     <Declaration>
+        <NamedIndividual IRI="SourceInstanceIdentifier"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="SourceVersionIdentifier"/>
+    </Declaration>
+    <Declaration>
         <NamedIndividual IRI="IntervalLowerBound"/>
     </Declaration>
     <Declaration>
@@ -806,6 +812,12 @@
     </Declaration>
     <Declaration>
         <NamedIndividual IRI="sdc4:DMType/instance_version"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="sdc4:DMType/source_instance_id"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="sdc4:DMType/source_version_id"/>
     </Declaration>
     <Declaration>
         <NamedIndividual IRI="sdc4:DMType/label"/>
@@ -1496,6 +1508,14 @@
     </ClassAssertion>
     <ClassAssertion>
         <Class IRI="ConceptualAspect"/>
+        <NamedIndividual IRI="SourceInstanceIdentifier"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="ConceptualAspect"/>
+        <NamedIndividual IRI="SourceVersionIdentifier"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="ConceptualAspect"/>
         <NamedIndividual IRI="IntervalLowerBound"/>
     </ClassAssertion>
     <ClassAssertion>
@@ -2025,6 +2045,14 @@
     <ClassAssertion>
         <Class IRI="ReferenceModelElement"/>
         <NamedIndividual IRI="sdc4:DMType/instance_version"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="ReferenceModelElement"/>
+        <NamedIndividual IRI="sdc4:DMType/source_instance_id"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="ReferenceModelElement"/>
+        <NamedIndividual IRI="sdc4:DMType/source_version_id"/>
     </ClassAssertion>
     <ClassAssertion>
         <Class IRI="ReferenceModelElement"/>
@@ -2819,6 +2847,16 @@
         <ObjectProperty IRI="hasDescriptiveElement"/>
         <NamedIndividual IRI="sdc4:DMType"/>
         <NamedIndividual IRI="sdc4:DMType/instance_version"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="hasDescriptiveElement"/>
+        <NamedIndividual IRI="sdc4:DMType"/>
+        <NamedIndividual IRI="sdc4:DMType/source_instance_id"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="hasDescriptiveElement"/>
+        <NamedIndividual IRI="sdc4:DMType"/>
+        <NamedIndividual IRI="sdc4:DMType/source_version_id"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="hasDescriptiveElement"/>
@@ -3484,6 +3522,16 @@
         <ObjectProperty IRI="describesConceptualAspect"/>
         <NamedIndividual IRI="sdc4:DMType/instance_version"/>
         <NamedIndividual IRI="InstanceVersion"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="describesConceptualAspect"/>
+        <NamedIndividual IRI="sdc4:DMType/source_instance_id"/>
+        <NamedIndividual IRI="SourceInstanceIdentifier"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="describesConceptualAspect"/>
+        <NamedIndividual IRI="sdc4:DMType/source_version_id"/>
+        <NamedIndividual IRI="SourceVersionIdentifier"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="describesConceptualAspect"/>
@@ -5965,7 +6013,7 @@
     <AnnotationAssertion>
         <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
         <IRI>sdc4:DMType/instance_id</IRI>
-        <Literal xml:lang="en">An optional, globally unique identifier for this specific data instance.</Literal>
+        <Literal xml:lang="en">A mandatory, globally unique identifier for this specific data instance, using CUID2.</Literal>
     </AnnotationAssertion>
     <AnnotationAssertion>
         <AnnotationProperty abbreviatedIRI="rdfs:label"/>
@@ -5981,6 +6029,46 @@
         <AnnotationProperty abbreviatedIRI="rdfs:label"/>
         <IRI>sdc4:DMType/instance_version</IRI>
         <Literal xml:lang="en">instance_version</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>sdc4:DMType/source_instance_id</IRI>
+        <Literal xml:lang="en">The identifier of the data instance in the originating source system.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>sdc4:DMType/source_instance_id</IRI>
+        <Literal xml:lang="en">source_instance_id</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>sdc4:DMType/source_version_id</IRI>
+        <Literal xml:lang="en">The version identifier from the originating source system.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>sdc4:DMType/source_version_id</IRI>
+        <Literal xml:lang="en">source_version_id</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>SourceInstanceIdentifier</IRI>
+        <Literal xml:lang="en">Represents the identifier from the originating source system for data lineage.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>SourceInstanceIdentifier</IRI>
+        <Literal xml:lang="en">Source Instance Identifier</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>SourceVersionIdentifier</IRI>
+        <Literal xml:lang="en">Represents the version identifier from the originating source system for data lineage.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>SourceVersionIdentifier</IRI>
+        <Literal xml:lang="en">Source Version Identifier</Literal>
     </AnnotationAssertion>
     <AnnotationAssertion>
         <AnnotationProperty abbreviatedIRI="rdfs:comment"/>

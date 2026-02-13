@@ -15,6 +15,9 @@
                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                xsi:schemaLocation="http://semanticdatacharter.org/ns/sdc4/ sdc4.xsd">
 
+    <!-- Instance identity (mandatory since Beale-Sovereignty) -->
+    <instance_id>cm7v2x8qk0001jn08g3h5r4w9</instance_id>
+
     <!-- Patient's full name using XdStringType -->
     <PatientName xsi:type="XdStringType">
         <label>Patient Full Name</label>
