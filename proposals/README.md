@@ -5,7 +5,7 @@ This directory collects candidate features, formalizations, and architectural id
 ## Ground Rules
 
 1. **Domain neutrality is non-negotiable.** Any proposal that introduces domain-specific concepts into the reference model will be rejected. SDC stays universally applicable.
-2. **The restriction-only lattice is non-negotiable.** xsd:restriction only, never xsd:extension. Proposals must work within this constraint.
+2. **Restriction-only in data models is non-negotiable.** Data models use xsd:restriction only, never xsd:extension. The reference model itself uses extension to build the type hierarchy. Proposals for new RM types may use extension; proposals that affect how data models specialize those types must use restriction.
 3. **Backward compatibility matters.** SDC5 data models must coexist with SDC4 data models in the same system. That's the permanence guarantee.
 4. **Each proposal stands alone.** One idea per file. Include rationale, impact analysis, and who proposed it.
 
@@ -29,3 +29,4 @@ Each proposal should include:
 | [confidence-over-absence-type.md](confidence-over-absence-type.md) | Confidence Distribution Over Absence Types | Kris Welford (external) | PROPOSED |
 | [geometric-formalization.md](geometric-formalization.md) | Formal Geometric Description of the Restriction Lattice | Kris Welford (external) / Tim Cook | PROPOSED |
 | [markov-blanket-formalization.md](markov-blanket-formalization.md) | Markov Blanket as Data Model Boundary Definition | Tim Cook | PROPOSED |
+| [3d-location-model.md](3d-location-model.md) | 3D Location Model for XdAnyType | Tim Cook | PROPOSED |
