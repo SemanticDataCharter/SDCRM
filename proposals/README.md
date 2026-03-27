@@ -6,7 +6,7 @@ This directory collects candidate features, formalizations, and architectural id
 
 1. **Domain neutrality is non-negotiable.** Any proposal that introduces domain-specific concepts into the reference model will be rejected. SDC stays universally applicable.
 2. **Restriction-only in data models is non-negotiable.** Data models use xsd:restriction only, never xsd:extension. The reference model itself uses extension to build the type hierarchy. Proposals for new RM types may use extension; proposals that affect how data models specialize those types must use restriction.
-3. **Backward compatibility matters.** SDC5 data models must coexist with SDC4 data models in the same system. That's the permanence guarantee.
+3. **Coexistence via namespacing.** SDC5 uses `xmlns:sdc5="https://semanticdatacharter.com/ns/sdc5/"` alongside SDC4's `xmlns:sdc4="https://semanticdatacharter.com/ns/sdc4/"`. Both versions coexist in the same system. SDC4 data models and instances remain valid forever. That's the permanence guarantee.
 4. **Each proposal stands alone.** One idea per file. Include rationale, impact analysis, and who proposed it.
 
 ## Proposal Template
