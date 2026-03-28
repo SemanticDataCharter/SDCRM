@@ -1,6 +1,6 @@
 # SDC5 Planning -- Proposals
 
-This directory collects candidate features, formalizations, and architectural ideas for a future SDC5 reference model. Nothing here is committed to implementation. These are ideas under evaluation.
+This directory collects candidate features, formalizations, and architectural ideas for SDC5. The `sdc5/` directory now exists at the repository root with the base namespace in place (see [`sdc5/schemas/sdc5.xsd`](../sdc5/schemas/sdc5.xsd)). Proposals here guide what changes beyond the namespace migration.
 
 ## Ground Rules
 

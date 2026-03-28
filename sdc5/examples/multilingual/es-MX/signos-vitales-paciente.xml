@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Ejemplo SDC5: Signos Vitales del Paciente
+  Idioma: Español (México)
+
+  Este ejemplo demuestra el agnosticismo lingüístico del SDC5.
+  Los identificadores estructurales (dm-, ms-, mc-) son inmutables,
+  pero las etiquetas y descripciones están en español.
+-->
+<dm-h7k2xvitalses
+  xmlns:sdc5="https://semanticdatacharter.com/ns/sdc5/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <!-- Metadatos del modelo en español -->
+  <sdc5:dm-label>Signos Vitales del Paciente</sdc5:dm-label>
+  <sdc5:dm-description>Registro de presión arterial y frecuencia cardíaca</sdc5:dm-description>
+  <sdc5:dm-language>es-MX</sdc5:dm-language>
+  <sdc5:dm-encoding>UTF-8</sdc5:dm-encoding>
+
+  <!-- Metadatos de la instancia -->
+  <sdc5:instance_id>inst-clj5x9z8a000108l0abc123es</sdc5:instance_id>
+  <sdc5:instance_version>1</sdc5:instance_version>
+  <sdc5:creation_timestamp>2025-10-19T14:30:00-06:00</sdc5:creation_timestamp>
+
+  <!-- Proveedor (Hospital) -->
+  <sdc5:provider>
+    <sdc5:party-name>Hospital General de México</sdc5:party-name>
+    <sdc5:party-type>organization</sdc5:party-type>
+  </sdc5:provider>
+
+  <!-- Sujeto (Paciente) -->
+  <sdc5:subject>
+    <sdc5:party-name>Juan García López</sdc5:party-name>
+    <sdc5:party-id>GAPL850615HDFNPN01</sdc5:party-id>
+    <sdc5:party-id-type>CURP</sdc5:party-id-type>
+  </sdc5:subject>
+
+  <!-- Datos clínicos: Cluster de Presión Arterial -->
+  <sdc5:ms-clj5x1g8f000008l09j7f6c3d>
+    <!-- En el esquema XSD, el label sería fijado como "Presión Arterial" -->
+
+    <!-- Sistólica -->
+    <sdc5:ms-clj5x2p4k000108l01a2b3c4d>
+      <!-- En el esquema XSD, el label sería fijado como "Sistólica" -->
+      <sdc5:xdquantity-value>120</sdc5:xdquantity-value>
+      <sdc5:xdquantity-units>
+        <sdc5:xdstring-value>mmHg</sdc5:xdstring-value>
+      </sdc5:xdquantity-units>
+      <sdc5:timestamp>2025-10-19T14:30:00-06:00</sdc5:timestamp>
+    </sdc5:ms-clj5x2p4k000108l01a2b3c4d>
+
+    <!-- Diastólica -->
+    <sdc5:ms-clj5x2p4k000108l01a2b3c4e>
+      <!-- En el esquema XSD, el label sería fijado como "Diastólica" -->
+      <sdc5:xdquantity-value>80</sdc5:xdquantity-value>
+      <sdc5:xdquantity-units>
+        <sdc5:xdstring-value>mmHg</sdc5:xdstring-value>
+      </sdc5:xdquantity-units>
+      <sdc5:timestamp>2025-10-19T14:30:00-06:00</sdc5:timestamp>
+    </sdc5:ms-clj5x2p4k000108l01a2b3c4e>
+  </sdc5:ms-clj5x1g8f000008l09j7f6c3d>
+
+  <!-- Frecuencia Cardíaca -->
+  <sdc5:ms-clj5xheart000208l0def456es>
+    <!-- En el esquema XSD, el label sería fijado como "Frecuencia Cardíaca" -->
+    <sdc5:xdcount-value>72</sdc5:xdcount-value>
+    <sdc5:xdcount-units>
+      <sdc5:xdstring-value>lpm</sdc5:xdstring-value>
+    </sdc5:xdcount-units>
+    <sdc5:timestamp>2025-10-19T14:30:00-06:00</sdc5:timestamp>
+  </sdc5:ms-clj5xheart000208l0def456es>
+
+  <!-- Pista de auditoría -->
+  <sdc5:audit>
+    <sdc5:audit-timestamp>2025-10-19T14:30:00-06:00</sdc5:audit-timestamp>
+    <sdc5:audit-party>
+      <sdc5:party-name>Dra. María Rodríguez</sdc5:party-name>
+      <sdc5:party-role>Enfermera</sdc5:party-role>
+    </sdc5:audit-party>
+    <sdc5:audit-action>Medición de signos vitales</sdc5:audit-action>
+  </sdc5:audit>
+</dm-h7k2xvitalses>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Basic Patient Record Example
+
+  This example demonstrates core SDC5 concepts:
+  - Using XdStringType for text data
+  - Using XdTemporalType for dates
+  - Using XdBooleanType for flags
+  - Adding governance (audit trail)
+  - Handling optional semantic links
+
+  This validates against sdc5.xsd
+-->
+<PatientRecord xmlns="http://semanticdatacharter.com/ns/sdc5/"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://semanticdatacharter.com/ns/sdc5/ sdc5.xsd">
+
+    <!-- Instance identity (mandatory since Beale-Sovereignty) -->
+    <instance_id>cm7v2x8qk0001jn08g3h5r4w9</instance_id>
+
+    <!-- Patient's full name using XdStringType -->
+    <PatientName xsi:type="XdStringType">
+        <label>Patient Full Name</label>
+        <data>Jane Marie Doe</data>
+        <audit>
+            <createdBy>registration-clerk-001</createdBy>
+            <createdOn>2025-11-02T08:30:00Z</createdOn>
+            <rationale>Patient registration</rationale>
+        </audit>
+    </PatientName>
+
+    <!-- Date of birth using XdTemporalType -->
+    <DateOfBirth xsi:type="XdTemporalType">
+        <label>Date of Birth</label>
+        <data>1985-03-15</data>
+        <temporalType>date</temporalType>
+        <audit>
+            <createdBy>registration-clerk-001</createdBy>
+            <createdOn>2025-11-02T08:30:00Z</createdOn>
+            <rationale>Patient registration</rationale>
+        </audit>
+    </DateOfBirth>
+
+    <!-- Active patient flag using XdBooleanType -->
+    <ActivePatient xsi:type="XdBooleanType">
+        <label>Is Active Patient</label>
+        <data>true</data>
+        <audit>
+            <createdBy>registration-clerk-001</createdBy>
+            <createdOn>2025-11-02T08:30:00Z</createdOn>
+            <rationale>New patient registration</rationale>
+        </audit>
+    </ActivePatient>
+
+    <!-- Patient ID using XdStringType with semantic link -->
+    <PatientID xsi:type="XdStringType">
+        <label>Patient Medical Record Number</label>
+        <data>MRN-2025-001234</data>
+        <audit>
+            <createdBy>registration-system</createdBy>
+            <createdOn>2025-11-02T08:30:00Z</createdOn>
+            <rationale>Auto-generated unique identifier</rationale>
+        </audit>
+        <links>
+            <meaning>http://hl7.org/fhir/identifier-use#official</meaning>
+        </links>
+    </PatientID>
+
+    <!-- Contact phone using XdStringType -->
+    <ContactPhone xsi:type="XdStringType">
+        <label>Primary Contact Phone</label>
+        <data>+1-555-123-4567</data>
+        <audit>
+            <createdBy>registration-clerk-001</createdBy>
+            <createdOn>2025-11-02T08:30:00Z</createdOn>
+            <rationale>Patient-provided contact information</rationale>
+        </audit>
+    </ContactPhone>
+
+</PatientRecord>

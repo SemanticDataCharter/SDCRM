@@ -15,6 +15,16 @@ The MAJOR version represents the SDC generation (4 = SDC4).
 
 ---
 
+## SDC5 - Initial Namespace (sdc5-planning branch)
+
+- Created sdc5/ directory tree parallel to sdc4/
+- Namespace: xmlns:sdc5="https://semanticdatacharter.com/ns/sdc5/"
+- All schemas, ontologies, examples, and specification updated to sdc5 namespace
+- SDC4 files remain frozen and untouched (coexistence guarantee)
+- Version: 5.0.0
+
+---
+
 ## [4.0.0] - Beale-Sovereignty Update (February 2026)
 
 ### Changed

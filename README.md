@@ -309,11 +309,16 @@ SDC is built on decades of standards development and open-source collaboration. 
 
 ```
 SDCRM/
-├── sdc4/
+├── sdc4/                 # SDC4 reference model (frozen, production)
 │   ├── schemas/          # Normative schemas (XSD, OWL)
 │   ├── specification/    # Complete specification and reference docs
 │   ├── examples/         # Working examples in multiple languages
 │   └── guides/           # Implementation and usage guides
+├── sdc5/                 # SDC5 reference model (parallel namespace)
+│   ├── schemas/          # sdc5.xsd, sdc5.owl, sdc5-meta.owl
+│   ├── specification/    # SDC5 specification and reference docs
+│   ├── examples/         # SDC5 examples
+│   └── guides/           # SDC5 implementation guides
 ├── docs/                 # Architecture, versioning, roadmap, FAQ
 ├── tools/                # Validation scripts and utilities
 ├── .github/              # Issue/PR templates, workflows
@@ -324,6 +329,10 @@ SDCRM/
 ├── README.md             # This file
 └── SECURITY.md           # Security policy
 ```
+
+---
+
+**Note**: SDC4 and SDC5 coexist via separate namespaces (`xmlns:sdc4` and `xmlns:sdc5`). SDC4 schemas, instances, and data models remain valid forever. SDC5 lives in the `sdc5/` directory with its own namespace (`https://semanticdatacharter.com/ns/sdc5/`). See [`proposals/README.md`](proposals/README.md) for SDC5 planning ground rules.
 
 ---
 

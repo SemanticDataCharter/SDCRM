@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Product Catalog Example
+
+  This example demonstrates:
+  - Using XdQuantityType for measurements with units
+  - Using XdCountType for discrete quantities
+  - Using XdLinkType for external references
+  - Complex audit trails with multiple authors
+
+  This validates against sdc5.xsd
+-->
+<Product xmlns="http://semanticdatacharter.com/ns/sdc5/"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://semanticdatacharter.com/ns/sdc5/ sdc5.xsd">
+
+    <!-- Instance identity (mandatory since Beale-Sovereignty) -->
+    <instance_id>cm7v2x8qk0002jn08p5m7k3v6</instance_id>
+
+    <!-- Product name -->
+    <ProductName xsi:type="XdStringType">
+        <label>Product Name</label>
+        <data>Wireless Bluetooth Headphones</data>
+        <audit>
+            <createdBy>product-manager-007</createdBy>
+            <createdOn>2025-10-15T14:00:00Z</createdOn>
+            <rationale>New product entry</rationale>
+        </audit>
+    </ProductName>
+
+    <!-- Product SKU -->
+    <SKU xsi:type="XdStringType">
+        <label>Stock Keeping Unit</label>
+        <data>WBH-2025-BLK-001</data>
+        <audit>
+            <createdBy>inventory-system</createdBy>
+            <createdOn>2025-10-15T14:00:00Z</createdOn>
+            <rationale>Auto-generated SKU</rationale>
+        </audit>
+    </SKU>
+
+    <!-- Product weight using XdQuantityType -->
+    <Weight xsi:type="XdQuantityType">
+        <label>Product Weight</label>
+        <magnitude>250.0</magnitude>
+        <units>g</units>
+        <magnitudeStatus>approximate</magnitudeStatus>
+        <audit>
+            <createdBy>product-engineer-042</createdBy>
+            <createdOn>2025-10-16T09:30:00Z</createdOn>
+            <rationale>Measured from production sample</rationale>
+        </audit>
+    </XdQuantityType>
+
+    <!-- Stock quantity using XdCountType -->
+    <StockQuantity xsi:type="XdCountType">
+        <label>Units in Stock</label>
+        <magnitude>1250</magnitude>
+        <audit>
+            <createdBy>inventory-system</createdBy>
+            <createdOn>2025-11-02T06:00:00Z</createdOn>
+            <rationale>Daily inventory update</rationale>
+        </audit>
+    </StockQuantity>
+
+    <!-- Product dimensions using XdQuantityType -->
+    <Length xsi:type="XdQuantityType">
+        <label>Product Length</label>
+        <magnitude>18.5</magnitude>
+        <units>cm</units>
+        <magnitudeStatus>exact</magnitudeStatus>
+        <audit>
+            <createdBy>product-engineer-042</createdBy>
+            <createdOn>2025-10-16T09:30:00Z</createdOn>
+            <rationale>CAD specifications</rationale>
+        </audit>
+    </XdQuantityType>
+
+    <!-- Manufacturer website using XdLinkType -->
+    <ManufacturerLink xsi:type="XdLinkType">
+        <label>Manufacturer Website</label>
+        <link>https://example.com/products/wbh-2025</link>
+        <relation>manufacturer-product-page</relation>
+        <audit>
+            <createdBy>product-manager-007</createdBy>
+            <createdOn>2025-10-15T14:00:00Z</createdOn>
+            <rationale>Product information source</rationale>
+        </audit>
+    </XdLinkType>
+
+    <!-- Is product active using XdBooleanType -->
+    <IsActive xsi:type="XdBooleanType">
+        <label>Product is Active in Catalog</label>
+        <data>true</data>
+        <audit>
+            <createdBy>product-manager-007</createdBy>
+            <createdOn>2025-10-20T10:00:00Z</createdOn>
+            <rationale>Product approved for sale</rationale>
+        </audit>
+    </XdBooleanType>
+
+</Product>

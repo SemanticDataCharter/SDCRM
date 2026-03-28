@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Exemple SDC5: Signes Vitaux du Patient
+  Langue: Français (France)
+
+  Cet exemple démontre l'agnosticisme linguistique du SDC5.
+  Les identifiants structurels (dm-, ms-, mc-) sont immuables,
+  mais les étiquettes et descriptions sont en français.
+-->
+<dm-h7k2xvitalsfr
+  xmlns:sdc5="https://semanticdatacharter.com/ns/sdc5/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <!-- Métadonnées du modèle en français -->
+  <sdc5:dm-label>Signes Vitaux du Patient</sdc5:dm-label>
+  <sdc5:dm-description>Enregistrement de la pression artérielle et de la fréquence cardiaque</sdc5:dm-description>
+  <sdc5:dm-language>fr-FR</sdc5:dm-language>
+  <sdc5:dm-encoding>UTF-8</sdc5:dm-encoding>
+
+  <!-- Métadonnées de l'instance -->
+  <sdc5:instance_id>inst-clj5x9z8a000108l0abc123fr</sdc5:instance_id>
+  <sdc5:instance_version>1</sdc5:instance_version>
+  <sdc5:creation_timestamp>2025-10-19T14:30:00+02:00</sdc5:creation_timestamp>
+
+  <!-- Fournisseur (Hôpital) -->
+  <sdc5:provider>
+    <sdc5:party-name>Hôpital Universitaire de Paris</sdc5:party-name>
+    <sdc5:party-type>organization</sdc5:party-type>
+  </sdc5:provider>
+
+  <!-- Sujet (Patient) -->
+  <sdc5:subject>
+    <sdc5:party-name>Jean Dupont</sdc5:party-name>
+    <sdc5:party-id>1234567890123</sdc5:party-id>
+    <sdc5:party-id-type>NIR</sdc5:party-id-type>
+  </sdc5:subject>
+
+  <!-- Données cliniques: Cluster de Pression Artérielle -->
+  <sdc5:ms-clj5x1g8f000008l09j7f6c3d>
+    <!-- Dans le schéma XSD, le label serait fixé comme "Pression Artérielle" -->
+
+    <!-- Systolique -->
+    <sdc5:ms-clj5x2p4k000108l01a2b3c4d>
+      <!-- Dans le schéma XSD, le label serait fixé comme "Systolique" -->
+      <sdc5:xdquantity-value>120</sdc5:xdquantity-value>
+      <sdc5:xdquantity-units>
+        <sdc5:xdstring-value>mmHg</sdc5:xdstring-value>
+      </sdc5:xdquantity-units>
+      <sdc5:timestamp>2025-10-19T14:30:00+02:00</sdc5:timestamp>
+    </sdc5:ms-clj5x2p4k000108l01a2b3c4d>
+
+    <!-- Diastolique -->
+    <sdc5:ms-clj5x2p4k000108l01a2b3c4e>
+      <!-- Dans le schéma XSD, le label serait fixé comme "Diastolique" -->
+      <sdc5:xdquantity-value>80</sdc5:xdquantity-value>
+      <sdc5:xdquantity-units>
+        <sdc5:xdstring-value>mmHg</sdc5:xdstring-value>
+      </sdc5:xdquantity-units>
+      <sdc5:timestamp>2025-10-19T14:30:00+02:00</sdc5:timestamp>
+    </sdc5:ms-clj5x2p4k000108l01a2b3c4e>
+  </sdc5:ms-clj5x1g8f000008l09j7f6c3d>
+
+  <!-- Fréquence Cardiaque -->
+  <sdc5:ms-clj5xheart000208l0def456fr>
+    <!-- Dans le schéma XSD, le label serait fixé comme "Fréquence Cardiaque" -->
+    <sdc5:xdcount-value>72</sdc5:xdcount-value>
+    <sdc5:xdcount-units>
+      <sdc5:xdstring-value>bpm</sdc5:xdstring-value>
+    </sdc5:xdcount-units>
+    <sdc5:timestamp>2025-10-19T14:30:00+02:00</sdc5:timestamp>
+  </sdc5:ms-clj5xheart000208l0def456fr>
+
+  <!-- Piste d'audit -->
+  <sdc5:audit>
+    <sdc5:audit-timestamp>2025-10-19T14:30:00+02:00</sdc5:audit-timestamp>
+    <sdc5:audit-party>
+      <sdc5:party-name>Dr. Marie Bernard</sdc5:party-name>
+      <sdc5:party-role>Infirmière</sdc5:party-role>
+    </sdc5:audit-party>
+    <sdc5:audit-action>Mesure des signes vitaux</sdc5:audit-action>
+  </sdc5:audit>
+</dm-h7k2xvitalsfr>
