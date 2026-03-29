@@ -31,3 +31,4 @@ Each proposal should include:
 | [geometric-formalization.md](geometric-formalization.md) | Formal Geometric Description of the Restriction Lattice | Kris Welford (external) / Tim Cook | PROPOSED |
 | [markov-blanket-formalization.md](markov-blanket-formalization.md) | Markov Blanket as Data Model Boundary Definition | Tim Cook | PROPOSED |
 | [3d-location-model.md](3d-location-model.md) | 3D Location Model for XdAnyType | Tim Cook | PROPOSED |
+| [xd-parsable-type.md](xd-parsable-type.md) | XdParsable Type for Structured Text Content | Tim Cook | PROPOSED |
