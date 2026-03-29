@@ -1,11 +1,16 @@
 # Semantic Data Charter Reference Model (SDCRM)
 
 ![Version](https://img.shields.io/badge/version-4.0.0-blue)
+![SDC5 Planning](https://img.shields.io/badge/SDC5-planning-teal)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![W3C Standards](https://img.shields.io/badge/W3C-XSD%20|%20RDF%20|%20OWL-orange)
 ![Open Source](https://img.shields.io/badge/open%20source-❤️-ff69b4)
 
-**The authoritative source for the Semantic Data Charter (SDC4) reference model, schemas, and specifications.**
+**The authoritative source for the Semantic Data Charter reference model, schemas, and specifications.**
+
+> **The Permanence Guarantee**: SDC is designed so that major version upgrades never break existing data. SDC4 and SDC5 coexist via separate XML namespaces (`xmlns:sdc4` and `xmlns:sdc5`). An SDC4 data model published today will remain valid, queryable, and computable when SDC5 ships, when SDC6 ships, and beyond. No migrations. No deprecations. No breakage. This is a structural property of the architecture, not a policy commitment.
+>
+> The `sdc5-planning` branch contains the SDC5 namespace, schemas, and [open proposals](https://github.com/SemanticDataCharter/SDCRM/issues) for community discussion.
 
 ---
 
