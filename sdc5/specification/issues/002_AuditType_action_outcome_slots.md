@@ -41,13 +41,28 @@ AuditType
   └── outcome     (XdTokenType, 0..1)  -> the result, audit-only case
 ```
 
+## Strongest argument for adoption (Read/View)
+
+FHIR `AuditEvent.action` is `C/R/U/D/E`. A `Read`/`View` (`R`) changes no state,
+so it cannot be a workflow transition: there is nothing to transition. Yet a
+read is exactly the thing one must audit. So the operation verb of a
+non-state-changing access event is intrinsically an audit fact with no workflow
+home. This is the strongest case that `AuditType` (or a sibling access-event
+type) needs a place to record the operation that occurred.
+
+A clean alternative that keeps `AuditType` pure custody: model a pure access log
+as its own DM with a modeled operation component, rather than adding an
+`activity` slot to `AuditType`. That preserves "AuditType is who/where/when" and
+still gives the logged Read a home. To be weighed in SDC5 design.
+
 ## Note (filer's inclination)
 
-This is likely to be **declined** in SDC5 design. The action belongs in
-`DM.workflow`, and `AuditType` is intentionally who/where/when. The audit-only
-case can already be modeled via the `location` workaround above. Filed now per
-the principle of capturing the question while it is fresh and deciding it during
-SDC5 design, not because adoption is expected.
+Inclination is still to **decline** an `AuditType` change: state-changing actions
+belong in `DM.workflow`, and `AuditType` is intentionally who/where/when. The
+Read/View case above is the genuine open question, and its cleanest resolution
+may be a separate access-log DM rather than a new `AuditType` slot. Filed per the
+principle of capturing the question while it is fresh and deciding it during SDC5
+design.
 
 ## Reference
 
