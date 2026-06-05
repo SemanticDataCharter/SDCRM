@@ -67,4 +67,4 @@ design.
 ## Reference
 
 Mapping that surfaced this: `/home/twcook/GitHub/FHIR-ProvGov/provgov-fhir-mapping.md`
-(§6, sdc5-planning gaps).
+(§7, sdc5-planning gaps).
