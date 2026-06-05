@@ -66,5 +66,6 @@ design.
 
 ## Reference
 
-Mapping that surfaced this: `/home/twcook/GitHub/FHIR-ProvGov/provgov-fhir-mapping.md`
-(§7, sdc5-planning gaps).
+Mapping that surfaced this:
+`Axius-SDC/IndustryResearch:FHIR-ProvGov/provgov-fhir-mapping.md` (§7,
+sdc5-planning gaps).
