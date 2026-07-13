@@ -1,6 +1,6 @@
 # **Semantic Data Charter (SDC) Specification**
 
-## **Version 1.0 - October 20, 2025**
+## **Version 4.0.0 - October 20, 2025**
 
 **This version:**
 
