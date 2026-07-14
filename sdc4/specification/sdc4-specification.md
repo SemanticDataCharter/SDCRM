@@ -519,11 +519,13 @@ SDC4 provides semantically rich extended data types that enhance basic data valu
 - Consent indicators (GDPR, medical consent)
 - Status indicators (active/inactive, enabled/disabled)
 
+**Structure**: `XdBooleanType` records its value through an `xsd:choice` of `true-value` and `false-value` (both `xsd:string`). Exactly one is present in an instance; the element that appears indicates the state, and its content is the enumerated option label defined in the Data Model (for example "Yes"/"No" or "Granted"/"Denied"). This forces the value into one of the two carefully-defined options rather than an implicit boolean.
+
 **Example Instance**:
 ```xml
 <sdc4:ms-consent-given>
   <sdc4:label>Patient Consent Given</sdc4:label>
-  <sdc4:xdboolean-value>true</sdc4:xdboolean-value>
+  <sdc4:true-value>Granted</sdc4:true-value>
 </sdc4:ms-consent-given>
 ```
 
@@ -725,14 +727,14 @@ SDC4 distinguishes between **quantified** (with units) and **non-quantified** (u
 - Educational levels (elementary=1, high school=2, college=3)
 - Likert scales (strongly disagree=1, disagree=2, neutral=3, agree=4, strongly agree=5)
 
+**Structure**: `XdOrdinalType` has two required children: `ordinal` (`xsd:decimal`, the ordered numeric code) and `symbol` (`xsd:string`, the display label for that code). As an ordered type it also inherits the optional `normal-status` and one or more `ReferenceRange` elements from `XdOrderedType` (see the Reference Ranges section).
+
 **Example**:
 ```xml
 <sdc4:ms-pain-level>
   <sdc4:label>Pain Severity</sdc4:label>
-  <sdc4:xdordinal-value>2</sdc4:xdordinal-value>
-  <sdc4:xdordinal-symbol>
-    <sdc4:xdstring-value>Moderate</sdc4:xdstring-value>
-  </sdc4:xdordinal-symbol>
+  <sdc4:ordinal>2</sdc4:ordinal>
+  <sdc4:symbol>Moderate</sdc4:symbol>
 </sdc4:ms-pain-level>
 ```
 
@@ -764,12 +766,15 @@ SDC4 distinguishes between **quantified** (with units) and **non-quantified** (u
 - API endpoint references
 - Hyperlinks to related resources
 
+**Structure**: `XdLinkType` has three children: `link` (`xsd:anyURI`, optional, the target address), `relation` (`xsd:string`, required, the human-readable relationship term), and `relation-uri` (`xsd:anyURI`, optional, a URI that formally defines the relation's semantics).
+
 **Example**:
 ```xml
 <sdc4:ms-patient-reference>
   <sdc4:label>Related Patient</sdc4:label>
-  <sdc4:xdlink-uri>dm-patient-clj5x9z...</sdc4:xdlink-uri>
-  <sdc4:xdlink-relationship>subject_of</sdc4:xdlink-relationship>
+  <sdc4:link>dm-patient-clj5x9z...</sdc4:link>
+  <sdc4:relation>subject_of</sdc4:relation>
+  <sdc4:relation-uri>http://purl.org/dc/terms/subject</sdc4:relation-uri>
 </sdc4:ms-patient-reference>
 ```
 
@@ -795,12 +800,14 @@ SDC4 distinguishes between **quantified** (with units) and **non-quantified** (u
 - Hash algorithm specification (`hash_function`)
 - Storage location (embedded vs. referenced)
 
-**Metadata Included**:
-- Original filename
-- MIME type / media type
-- File size
-- Hash for integrity verification (SHA-256, SHA-512, etc.)
-- Compression algorithm (if compressed)
+**Metadata Included** (all optional; the content is a required choice):
+- `media-type` — MIME type
+- `size` — size in bytes
+- `encoding` — character encoding
+- `compression-type` — compression algorithm, if compressed
+- `hash-result` and `hash-function` — integrity hash and its algorithm
+- `formalism`, `xdfile-language`, `alt-txt` — content formalism, language, and alternate text
+- Content is an `xsd:choice` of `uri` (external reference) or `media-content` (embedded `xsd:base64Binary`)
 
 **Use Cases**:
 - Document attachments (PDFs, Word docs, spreadsheets)
@@ -809,15 +816,15 @@ SDC4 distinguishes between **quantified** (with units) and **non-quantified** (u
 - Encrypted files with hash verification
 - Archived data
 
-**Example**:
+**Example** (elements follow the schema sequence order):
 ```xml
 <sdc4:ms-patient-photo>
   <sdc4:label>Patient Photograph</sdc4:label>
-  <sdc4:xdfile-media-type>image/jpeg</sdc4:xdfile-media-type>
-  <sdc4:xdfile-uri>file:///patient-photos/12345.jpg</sdc4:xdfile-uri>
-  <sdc4:xdfile-size>245760</sdc4:xdfile-size>
-  <sdc4:xdfile-hash-function>SHA-256</sdc4:xdfile-hash-function>
-  <sdc4:xdfile-hash-result>a3f5b...</sdc4:xdfile-hash-result>
+  <sdc4:size>245760</sdc4:size>
+  <sdc4:media-type>image/jpeg</sdc4:media-type>
+  <sdc4:hash-result>a3f5b...</sdc4:hash-result>
+  <sdc4:hash-function>SHA-256</sdc4:hash-function>
+  <sdc4:uri>file:///patient-photos/12345.jpg</sdc4:uri>
 </sdc4:ms-patient-photo>
 ```
 
@@ -837,10 +844,7 @@ SDC4 distinguishes between **quantified** (with units) and **non-quantified** (u
 - Python: Tuple, custom Range class
 - Java: Custom Range class
 
-**Interval Types Supported**:
-- **XdCountInterval**: Integer count ranges
-- **XdQuantityInterval**: Decimal quantity ranges with units
-- **XdTemporalInterval**: Date/time ranges (periods)
+**Structure**: `XdIntervalType` is a single type; there are no per-datatype interval subtypes. The `lower` and `upper` boundaries are of type `InvlType`, an `xsd:choice` that carries the boundary value in the appropriate datatype element: `invl-int`, `invl-decimal`, `invl-float`, `invl-double`, `invl-date`, `invl-time`, `invl-dateTime`, or `invl-duration`. In a Data Model this choice is constrained to one datatype, and an XSD 1.1 assertion enforces that `lower` and `upper` use the same one. Four booleans describe the boundaries: `lower_included` / `upper_included` (inclusive vs exclusive) and `lower_bounded` / `upper_bounded` (set `false` for an open, unbounded end). Optional `interval-units` carries units as a `units-name` and `units-uri` pair.
 
 **Use Cases**:
 - Normal ranges (e.g., normal blood pressure: 90-120 mmHg)
@@ -849,15 +853,24 @@ SDC4 distinguishes between **quantified** (with units) and **non-quantified** (u
 - Acceptable value ranges for validation
 - Quantity ranges (price ranges, measurement ranges)
 
-**Example (XdQuantityInterval)**:
+**Example** (a decimal interval, 90 to 120 mmHg, both bounds inclusive):
 ```xml
 <sdc4:ms-normal-systolic-range>
   <sdc4:label>Normal Systolic BP Range</sdc4:label>
-  <sdc4:xdquantity-interval-lower>90</sdc4:xdquantity-interval-lower>
-  <sdc4:xdquantity-interval-upper>120</sdc4:xdquantity-interval-upper>
-  <sdc4:xdquantity-units>
-    <sdc4:xdstring-value>mmHg</sdc4:xdstring-value>
-  </sdc4:xdquantity-units>
+  <sdc4:lower>
+    <sdc4:invl-decimal>90</sdc4:invl-decimal>
+  </sdc4:lower>
+  <sdc4:upper>
+    <sdc4:invl-decimal>120</sdc4:invl-decimal>
+  </sdc4:upper>
+  <sdc4:lower_included>true</sdc4:lower_included>
+  <sdc4:upper_included>true</sdc4:upper_included>
+  <sdc4:lower_bounded>true</sdc4:lower_bounded>
+  <sdc4:upper_bounded>true</sdc4:upper_bounded>
+  <sdc4:interval-units>
+    <sdc4:units-name>mmHg</sdc4:units-name>
+    <sdc4:units-uri>http://unitsofmeasure.org/ucum#mm[Hg]</sdc4:units-uri>
+  </sdc4:interval-units>
 </sdc4:ms-normal-systolic-range>
 ```
 
@@ -891,7 +904,7 @@ Use this decision tree to select the appropriate Xd* type:
 - **Yes**: XdFile
 
 **7. Is the data a range or interval?**
-- **Yes**: XdInterval (XdCountInterval, XdQuantityInterval, or XdTemporalInterval)
+- **Yes**: XdInterval
 
 ---
 
@@ -904,13 +917,13 @@ Use this decision tree to select the appropriate Xd* type:
 | XdBoolean    | -          | -               | -                 | -               | -         | Default value |
 | XdCount      | -          | ✓ (min/max)     | -                 | -               | ✓         | Non-negative integers |
 | XdQuantity   | -          | ✓ (min/max)     | -                 | -               | ✓ (required) | Precision, scale |
-| XdFloat      | -          | ✓ (min/max)     | -                 | -               | -         | IEEE 754 single |
-| XdDouble     | -          | ✓ (min/max)     | -                 | -               | -         | IEEE 754 double |
+| XdFloat      | -          | ✓ (min/max)     | -                 | -               | ✓         | IEEE 754 single |
+| XdDouble     | -          | ✓ (min/max)     | -                 | -               | ✓         | IEEE 754 double |
 | XdTemporal   | -          | ✓ (min/max)     | ✓ (ISO 8601)       | -               | -         | Granularity, timezone |
 | XdOrdinal    | -          | ✓ (defined set) | -                 | ✓ (ordered)     | -         | Code + label pairs |
 | XdLink       | -          | -               | ✓ (URI)            | ✓ (target types) | -         | Relationship semantics |
 | XdFile       | ✓ (size)   | -               | ✓ (MIME type)      | -               | -         | Hash, compression |
-| XdInterval   | -          | ✓ (bounds)      | -                 | -               | ✓ (for Quantity) | Inclusive/exclusive |
+| XdInterval   | -          | ✓ (bounds)      | -                 | -               | ✓ (optional) | Inclusive/exclusive, bounded/unbounded |
 
 ---
 
@@ -987,10 +1000,7 @@ XdAnyType (base type - provides label, definition, temporal metadata, access con
 ├── XdTemporalType
 ├── XdLinkType
 ├── XdFileType
-└── XdIntervalType (abstract)
-    ├── XdCountIntervalType
-    ├── XdQuantityIntervalType
-    └── XdTemporalIntervalType
+└── XdIntervalType
 ```
 
 **Key Points**:
