@@ -880,6 +880,46 @@ SDC4 distinguishes between **quantified** (with units) and **non-quantified** (u
 
 ---
 
+### **A.9.2. Reference Ranges (ReferenceRangeType)**
+
+Reference ranges attach named, context-sensitive value ranges to any *ordered* datatype (XdOrdinal, XdCount, XdQuantity, XdFloat, XdDouble, XdTemporal). They express meaningful bands, normal, critical, therapeutic, dangerous, and so on, each defined by an interval and sensitive to context such as sex, age, or location.
+
+Every `XdOrderedType` (the abstract base of the ordered datatypes) carries two optional children for this:
+
+- `ReferenceRange` (0..unbounded): one or more named ranges. `ReferenceRange` is a substitution-group member of `XdAny`, so it also carries `XdAnyType` metadata such as `label`.
+- `normal-status` (`xsd:string`, 0..1): the status of the instance value relative to those ranges.
+
+A `ReferenceRangeType` has three required children:
+
+- `definition` (`xsd:string`): the meaning of the range, for example `normal`, `critical`, or `therapeutic`.
+- `interval` (`XdIntervalType`): the value range (see A.9.1).
+- `is-normal` (`xsd:boolean`, default `false`): `true` if values in this range are considered normal in the context of `definition`.
+
+Because each range carries its own interval (with its own `interval-units`), a single ordered element can hold several ranges expressed in different unit systems, for example a temperature range in Celsius and another in Fahrenheit.
+
+**Example** (a normal systolic blood-pressure range):
+```xml
+<sdc4:ReferenceRange>
+  <sdc4:label>Normal Range</sdc4:label>
+  <sdc4:definition>normal</sdc4:definition>
+  <sdc4:interval>
+    <sdc4:lower><sdc4:invl-decimal>90</sdc4:invl-decimal></sdc4:lower>
+    <sdc4:upper><sdc4:invl-decimal>120</sdc4:invl-decimal></sdc4:upper>
+    <sdc4:lower_included>true</sdc4:lower_included>
+    <sdc4:upper_included>true</sdc4:upper_included>
+    <sdc4:lower_bounded>true</sdc4:lower_bounded>
+    <sdc4:upper_bounded>true</sdc4:upper_bounded>
+    <sdc4:interval-units>
+      <sdc4:units-name>mmHg</sdc4:units-name>
+      <sdc4:units-uri>http://unitsofmeasure.org/ucum#mm[Hg]</sdc4:units-uri>
+    </sdc4:interval-units>
+  </sdc4:interval>
+  <sdc4:is-normal>true</sdc4:is-normal>
+</sdc4:ReferenceRange>
+```
+
+---
+
 ### **A.10. Type Selection Decision Tree**
 
 Use this decision tree to select the appropriate Xd* type:
@@ -988,13 +1028,13 @@ Use this decision tree to select the appropriate Xd* type:
 ### **A.14. Xd* Type Inheritance Hierarchy**
 
 ```
-XdAnyType (base type - provides label, definition, temporal metadata, access control)
+XdAnyType (base type - provides label, access control, temporal + spatial metadata, exceptional values)
 ├── XdStringType
 ├── XdTokenType
 ├── XdBooleanType
-├── XdOrderedType (abstract - provides ordering semantics)
+├── XdOrderedType (abstract - ordering semantics, reference ranges)
 │   ├── XdOrdinalType
-│   └── XdQuantifiedType (abstract - provides units, magnitude status)
+│   └── XdQuantifiedType (abstract - units, magnitude status)
 │       ├── XdCountType
 │       ├── XdQuantityType
 │       ├── XdFloatType
@@ -1002,7 +1042,20 @@ XdAnyType (base type - provides label, definition, temporal metadata, access con
 ├── XdTemporalType
 ├── XdLinkType
 ├── XdFileType
-└── XdIntervalType
+├── XdIntervalType
+├── ReferenceRangeType
+├── XdBooleanListType
+├── XdStringListType
+├── XdTokenListType
+├── XdDecimalListType
+├── XdDoubleListType
+├── XdIntegerListType
+├── XdNonNegativeIntegerListType
+└── XdPositiveIntegerListType
+
+ExceptionalValueType (abstract, standalone - 16 ISO 21090 null-flavor subtypes:
+    NIType, MSKType, INVType, DERType, UNCType, OTHType, NINFType, PINFType,
+    UNKType, ASKRType, NASKType, QSType, TRCType, ASKUType, NAVType, NAType)
 ```
 
 **Key Points**:
@@ -1021,6 +1074,78 @@ This appendix serves as the authoritative reference for Xd* type selection and u
 ## 
 
 ## 
+
+### **A.15. Exceptional Values (ExceptionalValueType)**
+
+Data quality, the third SDC pillar, is handled explicitly rather than with implicit nulls. Every SDC element (through `XdAnyType`) may carry zero or more `ExceptionalValue` elements. Their presence flags that the element's value is missing, masked, or otherwise outside the normal measurable range, **and records why**. In SDC terms, NULL is not an answer: the reason is stated, not left implicit.
+
+`ExceptionalValueType` is an abstract base with a single `ev-name` element (a short descriptive phrase). The reference model defines sixteen concrete subtypes, each an ISO 21090-aligned null flavor that fixes `ev-name` to a specific value. A Data Model restricts `ExceptionalValue` to the subtype(s) it permits, and may add further domain-specific `ExceptionalValueType` restrictions.
+
+| Subtype | ev-name | Meaning |
+|---------|---------|---------|
+| `NIType` | No Information | Value is exceptional (missing, omitted, incomplete, improper); no information. |
+| `MSKType` | Masked | Information exists but was withheld (for example, for privacy). |
+| `INVType` | Invalid | The represented value is not a member of the permitted set. |
+| `DERType` | Derived | An actual value must be derived from the provided information. |
+| `UNCType` | Unencoded | The information was not encoded; only the raw source is present. |
+| `OTHType` | Other | The actual value is not among the permitted data values. |
+| `NINFType` | Negative Infinity | Negative infinity. |
+| `PINFType` | Positive Infinity | Positive infinity. |
+| `UNKType` | Unknown | A proper value applies but is not known. |
+| `ASKRType` | Asked and Refused | Information was sought but refused. |
+| `NASKType` | Not Asked | The information was not sought. |
+| `QSType` | Sufficient Quantity | The exact quantity is unknown but known to be non-zero and sufficient. |
+| `TRCType` | Trace | Greater or less than zero, but too small to quantify. |
+| `ASKUType` | Asked but Unknown | Information was sought but not found. |
+| `NAVType` | Not Available | Not available; the specific reason is unknown. |
+| `NAType` | Not Applicable | No proper value applies in this context. |
+
+**Example** (an element whose value is unknown; the Data Model has restricted `ExceptionalValue` to `UNKType`, which fixes `ev-name`):
+```xml
+<sdc4:ms-patient-weight>
+  <sdc4:label>Patient Weight</sdc4:label>
+  <sdc4:ExceptionalValue>
+    <sdc4:ev-name>Unknown</sdc4:ev-name>
+  </sdc4:ExceptionalValue>
+</sdc4:ms-patient-weight>
+```
+
+---
+
+### **A.16. List Types**
+
+SDC provides list datatypes for whitespace-delimited sequences of primitive values, for the efficient storage and transmission of many related values in one field. Each `Xd<Type>ListType` extends `XdAnyType` (so it carries `label` and the standard metadata) and adds a single value element, `xd<type>list-value`, typed as the corresponding `*ListSimpleType` (an `xsd:list` of the item type).
+
+| Type | Value element | Item type |
+|------|---------------|-----------|
+| `XdBooleanListType` | `xdbooleanlist-value` | `xsd:boolean` |
+| `XdStringListType` | `xdstringlist-value` | `xsd:string` |
+| `XdTokenListType` | `xdtokenlist-value` | `xsd:token` |
+| `XdDecimalListType` | `xddecimallist-value` | `xsd:decimal` |
+| `XdDoubleListType` | `xddoublelist-value` | `xsd:double` |
+| `XdIntegerListType` | `xdintegerlist-value` | `xsd:integer` |
+| `XdNonNegativeIntegerListType` | `xdnonnegativeintegerlist-value` | `xsd:nonNegativeInteger` |
+| `XdPositiveIntegerListType` | `xdpositiveintegerlist-value` | `xsd:positiveInteger` |
+
+**Example**:
+```xml
+<sdc4:ms-daily-counts>
+  <sdc4:label>Daily Counts</sdc4:label>
+  <sdc4:xdintegerlist-value>12 15 9 20 7</sdc4:xdintegerlist-value>
+</sdc4:ms-daily-counts>
+```
+
+---
+
+### **A.17. Simple Types**
+
+Beyond the complex Xd* types, the reference model defines eleven named simple types used as element datatypes:
+
+- **`lattype`** and **`lontype`** — decimal restrictions for the spatial coordinates on `XdAnyType`: latitude constrained to `[-90.000000, 90.000000]` and longitude to `[-180.000000, 180.000000]`.
+- **`MagnitudeStatus`** — the enumeration used by `XdQuantifiedType`'s `magnitude-status`, indicating how a recorded magnitude relates to the true value: `equal`, `less_than`, `greater_than`, `less_than_or_equal`, `greater_than_or_equal`, `approximate`.
+- **The eight `*ListSimpleType`s** — the `xsd:list` types backing the List datatypes (A.16): `BooleanListSimpleType`, `StringListSimpleType`, `TokenListSimpleType`, `DecimalListSimpleType`, `DoubleListSimpleType`, `IntegerListSimpleType`, `NonNegativeIntegerListSimpleType`, and `PositiveIntegerListSimpleType`, each a whitespace-delimited list of its item type.
+
+---
 
 ## **7\. Reference Model Component Details**
 
