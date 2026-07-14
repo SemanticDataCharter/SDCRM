@@ -27,6 +27,12 @@ The SDC is founded on three core pillars:
 
 This specification provides the technical details of the SDC Reference Model, which is implemented in XML Schema (XSD) and OWL (Web Ontology Language).
 
+### **1.1. Notational Conventions**
+
+The key words **MUST**, **MUST NOT**, **REQUIRED**, **SHALL**, **SHALL NOT**, **SHOULD**, **SHOULD NOT**, **RECOMMENDED**, **MAY**, and **OPTIONAL** in this document are to be interpreted as described in [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) and [RFC 8174](https://www.rfc-editor.org/rfc/rfc8174) when, and only when, they appear in all capitals.
+
+The **normative** artifact of SDC4 is the reference model schema `sdc4.xsd`; this document *describes* it. Where this document and the schema disagree, the schema governs. Material marked *informative*, including the modeling examples (Section 5) and the mapping, decision-tree, and best-practice material in Appendix A, illustrates usage and adds no conformance requirements.
+
 ## 
 
 ## **2\. Standards Compliance and Enabling**
@@ -58,10 +64,34 @@ By providing a consistent, machine-readable framework for governance, semantics,
 
 ## **3\. Conformance**
 
-Conformance to the Semantic Data Charter is defined at two levels:
+Conformance is defined against three targets: a Data Model, an instance, and a processor.
 
-* **SDC Reference Model Conformance:** A data model conforms to the SDC Reference Model if its defining XML Schema is a valid xsd:restriction of the SDC Reference Model (sdc4.xsd). Data models **MUST NOT** use xsd:extension to add new elements or attributes to the SDC types. Conformance requires that both the data model schema itself is valid and that any data instance successfully validates against that restricted schema.  
-* **SDC Principles Conformance:** An organization's data practices conform to the SDC principles if they adhere to the governance, meaning, and quality pillars outlined in this document.
+### **3.1. Conformant Data Model**
+
+An XML Schema is a **conformant SDC4 Data Model** if and only if:
+
+- it defines its components solely by `xsd:restriction` of the SDC4 reference model types, and **MUST NOT** use `xsd:extension` to add elements or attributes to any SDC4 type;
+- it is itself a valid XSD 1.1 schema; and
+- every component it defines resolves, through a chain of restrictions, to a reference-model type.
+
+A conformant Data Model can be checked mechanically against the reference model (for example, with the `sdcvalidator` schema-compliance check).
+
+### **3.2. Conformant Instance**
+
+An XML document is a **conformant SDC4 instance** if and only if:
+
+- it validates against a conformant SDC4 Data Model (Section 3.1); and
+- it carries an `instance_id` (a CUID2), which is **REQUIRED** on every instance.
+
+Instances conform to their Data Model schema, not to `sdc4.xsd` directly.
+
+### **3.3. Conformant Processor**
+
+Software is a **conformant SDC4 processor** to the extent that it preserves the guarantees above: it **MUST** reject a Data Model that applies `xsd:extension` to an SDC4 type, **MUST** treat `sdc4.xsd` as normative where documentation and schema disagree, and **MUST NOT** silently discard `ExceptionalValue`, provenance, or identity elements when reading, transforming, or emitting instances.
+
+### **3.4. Principles Conformance**
+
+Beyond the mechanical targets above, an organization's data practices conform to the SDC principles when they uphold the three pillars, governance, meaning, and quality, described in this specification.
 
 ## 
 
@@ -228,6 +258,19 @@ Unlike traditional approaches, which often break backward compatibility and requ
 ## 
 
 ## 
+
+### **4.6. Identifiers and Federated Resolvability**
+
+SDC4 identifies every model component and every data instance with a **CUID2**, a collision-resistant identifier that can be minted offline, with no central registry and no coordination between parties. This gives SDC identity three properties at once: it is **federated** (parties who have never met assign identifiers independently without collision), **permanent** (an identifier, once assigned, never changes), and **resolvable** (each identifier maps to a typed, dereferenceable URI).
+
+**Identifier forms.**
+
+- **Instance identity.** Every instance carries an `instance_id` (**REQUIRED**, a CUID2). Optional `instance_version`, `source_instance_id`, and `source_version_id` (Section 4.3.1) record versioning and lineage back to an originating system.
+- **Component identity.** A reusable Model Component type is named `mc-<CUID2>`, the element that carries it is named `ms-<CUID2>`, and a Data Model root is named `dm-<CUID2>` (Section 4.4). These names are permanent: the structure bound to a given `ms-<CUID2>` never changes (Section 4.5).
+
+**Typed, resolvable namespace.** Reference-model and model URIs live under a versioned namespace, `https://semanticdatacharter.com/ns/sdc4/`, served over HTTP so that a processor can dereference a schema or component URI directly. Because the namespace is versioned (`.../ns/sdc4/`, and in future `.../ns/sdc5/`), successor reference models are published *alongside* their predecessors, not on top of them.
+
+**Permanence across reference-model versions.** When a new reference model is released it is published at a new versioned namespace; the previous namespace and every schema under it continue to resolve and validate unchanged. An SDC4 package therefore keeps working after SDC5 deploys: its identifiers still resolve, and its instances still validate against the SDC4 schema they were built against. The identifier and namespace resolve an element's *meaning* globally; access to the *data* itself remains governed separately through the access-control elements (`acs`, `act`; Section 4.2.1).
 
 ## **5\. Modeling Examples**
 
