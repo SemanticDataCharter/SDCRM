@@ -418,10 +418,12 @@ This appendix provides a comprehensive reference for all SDC4 extended data type
 
 SDC4 provides semantically rich extended data types that enhance basic data values with governance, provenance, and constraint information. Each Xd* type consists of:
 
-- **Value Component**: The actual data value (e.g., `xdstring-value`, `xdcount-value`)
+- **Value or Parts**: A scalar type carries its data in a type-prefixed value element (e.g., `xdstring-value`, `xdcount-value`); a structured type carries semantically-named parts instead (see the naming convention below)
 - **Type Class**: The corresponding complexType definition (e.g., `XdStringType`, `XdCountType`)
 - **Constraint Capabilities**: Available validation rules specific to the type
-- **Metadata Support**: Inherited from `XdAnyType` (label, definition, temporal validity, access control)
+- **Metadata Support**: Inherited from `XdAnyType` (label, access control, temporal and spatial validity, and exceptional values)
+
+**Element Naming Convention.** A *single-value* (scalar) Xd type exposes its payload with a type-prefixed name, `xd<type>-value` (for example `xdstring-value`, `xdcount-value`, `xdquantity-value`), plus the modifiers `xd<type>-units` and `xd<type>-language` where applicable. A *structured* Xd type, one whose parts each carry their own distinct meaning, names those parts semantically instead, because there is no single payload value: `XdBoolean` uses a `true-value`/`false-value` choice; `XdOrdinal` uses `ordinal` and `symbol`; `XdLink` uses `link`, `relation`, and `relation-uri`; `XdFile` uses `size`, `media-type`, `uri`/`media-content`, and related metadata; `XdInterval` uses `lower`, `upper`, and the boundary flags. In short: scalar types carry a typed `-value`; structured types carry semantically-named parts. Do not apply an `xd<type>-` prefix to a structured type's elements.
 
 ### **A.2. Textual Data Types**
 
