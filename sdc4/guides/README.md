@@ -12,6 +12,18 @@ Practical guides for implementing SDC4-compliant data models.
 - Creating your first model
 - Validation basics
 
+### Datatype Reference Guides
+
+Reference material moved out of the specification's Appendix A to keep the specification normative:
+
+- **[type-selection.md](type-selection.md)** - Choosing the right Xd\* datatype (decision tree)
+- **[datatype-mapping.md](datatype-mapping.md)** - Mapping CSV, SQL, and language types to Xd\* types
+- **[best-practices.md](best-practices.md)** - SDC4 modeling best practices
+
+### Workflow
+
+- **[workflow-state-machine.md](workflow-state-machine.md)** - Embedding workflow and state-machine definitions in a Data Model
+
 ### Creating Data Models
 
 **[creating-data-models.md](creating-data-models.md)** *(coming soon)*

@@ -106,17 +106,20 @@ The SDC architecture is composed of the following key components:
 
 ### **4.1. Core Data Types**
 
-The SDC Reference Model provides a rich set of extended data types (Xd\* types) that go beyond the standard XML Schema data types. These include:
+The SDC Reference Model provides a rich set of extended data types (Xd\* types) that go beyond the standard XML Schema data types. The complete set, with its inheritance, is given in Appendix A (see A.14 for the hierarchy). The datatypes are:
 
-* XdAnyType: The base type for all SDC extended data types.  
-* XdStringType, XdTokenType: For textual data.  
-* XdBooleanType: For boolean values.  
-* XdCountType, XdQuantityType, XdFloatType, XdDoubleType: For numeric data.  
-* XdTemporalType: For date and time information.  
-* XdLinkType: For creating relationships between data models.  
-* XdFileType: For embedding or referencing binary data.  
-* ClusterType: For grouping related data elements.  
-* XdAdapterType: For adapting any Xd\* type for use within a ClusterType.
+* **Base and abstract:** XdAnyType (the base of every Xd\* type), and the abstract intermediates XdOrderedType (ordering and reference ranges) and XdQuantifiedType (units and magnitude metadata).
+* **Textual:** XdStringType, XdTokenType.
+* **Boolean:** XdBooleanType.
+* **Numeric (quantified):** XdCountType, XdQuantityType, XdFloatType, XdDoubleType.
+* **Ordinal:** XdOrdinalType.
+* **Temporal:** XdTemporalType.
+* **Link:** XdLinkType.
+* **File:** XdFileType.
+* **Interval and reference range:** XdIntervalType, ReferenceRangeType.
+* **List types (8):** XdBooleanListType, XdStringListType, XdTokenListType, XdDecimalListType, XdDoubleListType, XdIntegerListType, XdNonNegativeIntegerListType, XdPositiveIntegerListType.
+
+The **structural** components that assemble these into a Data Model, ItemType, ClusterType, and XdAdapterType, are described in Appendix A.18; the DMType instance root is detailed in Section 4.3.1.
 
 ### 
 
@@ -171,7 +174,7 @@ The DMType serves as the root element for every SDC data instance. Its primary r
 | source\_instance\_id | xsd:string | 0..1 | Identifier of this data instance in the originating source system (e.g., Epic, SAP). Enables auditable data lineage across system boundaries. |
 | source\_version\_id | xsd:string | 0..1 | Version identifier from the originating source system. Paired with source\_instance\_id, provides a complete reference to the exact upstream version ingested. |
 | current-state | xsd:string | 0..1 | The current state according to the workflow defined in the workflow element. |
-| data | ItemType (ref) | 1..1 | The data structure of the model (substitution group: Item). |
+| Item (ref) | ItemType | 1..1 | The data payload: an element in the `Item` substitution group (a `ClusterType` or `XdAdapterType`). In an instance this is the concrete `ms-<CUID2>` element that substitutes for `Item`. |
 | subject | PartyType | 0..1 | Identity of the human subject of the data (patient, customer, etc.). |
 | provider | PartyType | 0..* | Source of the information (clinician, device, software, etc.). |
 | participations | ParticipationType (ref) | 0..* | Other participations in the data activity. |
@@ -972,31 +975,7 @@ Because each range carries its own interval (with its own `interval-units`), a s
 
 ### **A.10. Type Selection Decision Tree**
 
-Use this decision tree to select the appropriate Xd* type:
-
-**1. Is the data textual?**
-- **Yes**: XdString (or XdToken for normalized codes)
-
-**2. Is the data boolean (true/false)?**
-- **Yes**: XdBoolean
-
-**3. Is the data numeric?**
-- **Yes, whole numbers only (counts)**: XdCount
-- **Yes, decimal values with units**: XdQuantity
-- **Yes, scientific floating-point**: XdFloat or XdDouble
-- **Yes, ordered categorical**: XdOrdinal
-
-**4. Is the data temporal (date/time)?**
-- **Yes**: XdTemporal
-
-**5. Is the data a reference or link?**
-- **Yes**: XdLink
-
-**6. Is the data binary or a file?**
-- **Yes**: XdFile
-
-**7. Is the data a range or interval?**
-- **Yes**: XdInterval
+*(Informative.)* Moved to a guide: see [`sdc4/guides/type-selection.md`](../guides/type-selection.md) for the datatype decision tree.
 
 ---
 
@@ -1021,57 +1000,13 @@ Use this decision tree to select the appropriate Xd* type:
 
 ### **A.12. Common Datatype Mapping Examples**
 
-#### **CSV/Spreadsheet to Xd* Types**
-
-| **CSV Data** | **Example Value** | **Xd* Type** | **Reasoning** |
-|--------------|-------------------|--------------|---------------|
-| Name, Address, Description | "John Doe" | XdString | Free-text character data |
-| Country Code, Product SKU | "US", "SKU-12345" | XdString (with enumeration or pattern) | Controlled codes |
-| Enabled, Active, Consented | "true", "yes", "1" | XdBoolean | Boolean logic |
-| Quantity, Count, Number of Items | 42, 1000 | XdCount | Non-negative integers |
-| Price, Weight, Temperature | 19.99, 72.5 | XdQuantity | Decimal with units |
-| Date, DateTime, Timestamp | "2025-11-09", "2025-11-09T15:30:00Z" | XdTemporal | Temporal data |
-| Priority, Severity, Rating | "High", "Severe" | XdOrdinal | Ordered categories |
-| Email, URL, Reference ID | "user@example.com" | XdString (with regex pattern) | Formatted strings |
-
-#### **Database Column to Xd* Types**
-
-| **SQL Type** | **Xd* Type** | **Notes** |
-|--------------|--------------|-----------|
-| VARCHAR, CHAR, TEXT | XdString | General text |
-| BOOLEAN, BIT | XdBoolean | Boolean values |
-| INTEGER, SMALLINT, BIGINT | XdCount | Non-negative counts; use XdQuantity if negative values allowed |
-| DECIMAL, NUMERIC | XdQuantity | Quantities with units |
-| REAL, FLOAT(24) | XdFloat | Single-precision floating-point |
-| DOUBLE PRECISION, FLOAT(53) | XdDouble | Double-precision floating-point |
-| DATE, TIMESTAMP | XdTemporal | Temporal data |
-| ENUM (ordered) | XdOrdinal | Ordered enumerations |
-| BLOB, BYTEA | XdFile | Binary data |
-| Foreign Key, URI column | XdLink | References to other entities |
+*(Informative.)* Moved to a guide: see [`sdc4/guides/datatype-mapping.md`](../guides/datatype-mapping.md) for CSV, SQL, and cross-language mappings to Xd\* types.
 
 ---
 
 ### **A.13. Best Practices**
 
-1. **Always Use Units for Quantified Types**: XdCount and XdQuantity require units. Even if units seem obvious (e.g., "items"), specify them explicitly.
-
-2. **Choose Appropriate Numeric Types**:
-   - Use **XdCount** for non-negative integer counts
-   - Use **XdQuantity** for decimal measurements with units
-   - Use **XdFloat/XdDouble** only for scientific calculations where floating-point representation is required
-   - Avoid XdFloat/XdDouble for financial data (use XdQuantity with DECIMAL instead)
-
-3. **Leverage Constraints**: Define constraints in the schema (regex patterns, min/max values, enumerations) to ensure data quality.
-
-4. **Use XdOrdinal for Ordered Categories**: If categories have meaningful order (severity, priority), use XdOrdinal instead of XdString.
-
-5. **Embed Semantics in Labels**: Use the fixed `label` element in schema definitions to provide immutable semantic meaning.
-
-6. **Temporal Granularity**: XdTemporal supports various granularities. Choose the appropriate level (date only, datetime, etc.) based on requirements.
-
-7. **File Integrity**: When using XdFile, always include hash values for integrity verification, especially for medical or financial documents.
-
-8. **Link Relationships**: When using XdLink, specify the relationship semantics (e.g., "subject_of", "part_of", "derived_from") for clarity.
+*(Informative.)* Moved to a guide: see [`sdc4/guides/best-practices.md`](../guides/best-practices.md) for SDC4 modeling best practices.
 
 ---
 
@@ -1197,15 +1132,9 @@ Beyond the complex Xd* types, the reference model defines eleven named simple ty
 
 ---
 
-## **7\. Reference Model Component Details**
+### **A.18. Structural Components**
 
-This section provides a detailed explanation of the primary complexType components available in the SDC Reference Model (sdc4.xsd).
-
-### 
-
-### **7.1. Root and Structural Components**
-
-These components form the foundational structure of any SDC Data Model.
+These Item-family components assemble the datatypes above into a Data Model. They are defined by `xsd:restriction` of the reference-model types using the `mc-<CUID2>` / `ms-<CUID2>` pattern (Section 4.4); the DMType instance root is also detailed in Section 4.3.1.
 
 * **DMType**: The mandatory root element type for any SDC instance document. It acts as a wrapper for the data payload and contains instance-specific metadata.  
   **Data Model Schema Example:** This example defines the root element for a "Patient Vitals" Data Model. It restricts the base DMType, fixes the dm-label to provide the model's semantic name, and specifies that the main data payload will be a specific "Vitals Cluster" component.  
@@ -1255,68 +1184,4 @@ These components form the foundational structure of any SDC Data Model.
     \</xsd:complexContent\>  
   \</xsd:complexType\>
 
-### **7.2. Core Data Types (Xd\* Types)**
-
-These types provide semantically rich representations for common data values.
-
-* **XdStringType**: A general-purpose type for character strings.  
-  **Data Model Schema Example:** This creates a reusable component for a "Customer ID". It restricts XdStringType, fixes the label, and applies a regex pattern to the value, enforcing a specific format.  
-  \<xsd:complexType name="mc-clj5x4b1c000308l0i9j8k7l6"\>  
-    \<xsd:complexContent\>  
-      \<xsd:restriction base="sdc4:XdStringType"\>  
-        \<xsd:sequence\>  
-          \<xsd:element name="label" type="xsd:string" fixed="Customer ID"/\>  
-          ...  
-          \<xsd:element name="xdstring-value"\>  
-            \<xsd:simpleType\>  
-              \<xsd:restriction base="xsd:string"\>  
-                \<xsd:pattern value="CUST-\[0-9\]{5}"/\>  
-              \</xsd:restriction\>  
-            \</xsd:simpleType\>  
-          \</xsd:element\>  
-          ...  
-        \</xsd:sequence\>  
-      \</xsd:restriction\>  
-    \</xsd:complexContent\>  
-  \</xsd:complexType\>
-
-* **XdQuantityType**: Represents a physical quantity with a decimal value and units.  
-  **Data Model Schema Example:** This defines a "Systolic Blood Pressure" component. It restricts XdQuantityType, fixes the label, and requires the units to be "mmHg".  
-  \<xsd:complexType name="mc-clj5x2p4k000108l01a2b3c4d"\>  
-    \<xsd:complexContent\>  
-      \<xsd:restriction base="sdc4:XdQuantityType"\>  
-        \<xsd:sequence\>  
-          \<xsd:element name="label" type="xsd:string" fixed="Systolic"/\>  
-          ...  
-          \<xsd:element name="xdquantity-value" type="xsd:decimal"/\>  
-          \<xsd:element name="xdquantity-units"\>  
-            \<xsd:complexType\>  
-              \<xsd:complexContent\>  
-                \<xsd:restriction base="sdc4:XdStringType"\>  
-                  \<xsd:sequence\>  
-                    \<xsd:element name="xdstring-value" type="xsd:string" fixed="mmHg"/\>  
-                  \</xsd:sequence\>  
-                \</xsd:restriction\>  
-              \</xsd:complexContent\>  
-            \</xsd:complexType\>  
-          \</xsd:element\>  
-        \</xsd:sequence\>  
-      \</xsd:restriction\>  
-    \</xsd:complexContent\>  
-  \</xsd:complexType\>
-
-* **XdTemporalType**: A flexible type for representing date and time.  
-  **Data Model Schema Example:** This defines a "Measurement Time" component. It restricts XdTemporalType to allow *only* an xsd:dateTime value, ensuring full temporal precision.  
-  \<xsd:complexType name="mc-clj5x3a9b000208l0e5f6g7h8"\>  
-    \<xsd:complexContent\>  
-      \<xsd:restriction base="sdc4:XdTemporalType"\>  
-        \<xsd:sequence\>  
-          \<xsd:element name="label" type="xsd:string" fixed="Measurement Time"/\>  
-          ...  
-          \<xsd:choice\>  
-            \<xsd:element name="xdtemporal-datetime" type="xsd:dateTime"/\>  
-          \</xsd:choice\>  
-        \</xsd:sequence\>  
-      \</xsd:restriction\>  
-    \</xsd:complexContent\>  
-  \</xsd:complexType\>  
+The same `xsd:restriction` pattern shown above applies to every Xd\* datatype; see A.2 through A.17 for each type's structure and constraints.
