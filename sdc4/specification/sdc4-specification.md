@@ -100,10 +100,10 @@ The SDC Reference Model includes a comprehensive set of components for capturing
 
 Governance components define the actors, roles, and responsibilities associated with the data.
 
-* **PartyType**: Represents an actor involved with the data, which can be a person, organization, device, or software application.  
-* **ParticipationType**: Describes the role of a PartyType in a specific activity related to the data.  
-* **AttestationType**: Provides a formal mechanism for a party to attest to the data's content.  
-* **AuditType**: Captures a detailed audit trail of every system and user that has interacted with the data.  
+* **PartyType**: An actor involved with the data (person, organization, device, or software). Elements: `party-name` (string), `party-ref` (an XdLink to an external identity), and `party-details` (a Cluster for structured detail).  
+* **ParticipationType**: The role a party plays in an activity. Elements: `performer` (a Party), `function` and `mode` (XdString), and `start`/`end` (dateTime).  
+* **AttestationType**: A formal attestation of the data's content. Elements: `view` and `proof` (XdFile), `reason` (XdString), `committer` (a Party), `committed` (dateTime), and `pending` (boolean).  
+* **AuditType**: An audit-trail entry for one system or user interaction. Elements: `system-id` (XdString), `system-user` (a Party), `location` (a Cluster), and `timestamp` (dateTime).  
 * **Access Control**: The model supports linking to external access control systems via the acs element and allows for fine-grained control via the act (Access Control Tag) element.
 
 #### 
@@ -114,6 +114,7 @@ Provenance components provide a complete history of the data's origin, creation,
 
 * **Instance Metadata**: The root DMType contains key provenance fields: instance\_id (mandatory, CUID2), instance\_version, source\_instance\_id, source\_version\_id, creation\_timestamp, subject, and provider.  
 * **Temporal Validity**: Every data element (XdAnyType) contains optional timestamp fields to track its lifecycle: vtb (Valid Time Begin), vte (Valid Time End), tr (Time Recorded), and modified.
+* **Spatial Context**: Every data element (XdAnyType) may also carry optional `latitude` and `longitude` (decimal, constrained to ±90 and ±180 respectively), locating the datum in space at the point of capture. Together with the temporal fields this gives every element optional spatio-temporal context.
 
 ### 
 
@@ -537,7 +538,13 @@ SDC4 provides semantically rich extended data types that enhance basic data valu
 
 ### **A.4. Numeric Data Types**
 
-SDC4 distinguishes between **quantified** (with units) and **non-quantified** (unitless) numeric types.
+SDC4's numeric types, `XdCount`, `XdQuantity`, `XdFloat`, and `XdDouble`, all extend `XdQuantifiedType`, which adds an optional units element and measurement-quality metadata to the value.
+
+**Quantified metadata (shared by all four numeric types via `XdQuantifiedType`):**
+
+- `magnitude-status` (`MagnitudeStatus`): how the recorded magnitude relates to the true value, one of `equal`, `less_than`, `greater_than`, `less_than_or_equal`, `greater_than_or_equal`, or `approximate` (for example, a reading recorded as "less than 140").
+- `accuracy_margin` (`xsd:decimal`): the accuracy margin of the measurement.
+- `precision_digits` (`xsd:nonNegativeInteger`): the number of significant digits of precision.
 
 #### **A.4.1. XdCount / XdCountType**
 
@@ -1038,7 +1045,12 @@ XdAnyType (base type - provides label, access control, temporal + spatial metada
 │       ├── XdCountType
 │       ├── XdQuantityType
 │       ├── XdFloatType
-│       └── XdDoubleType
+│       ├── XdDoubleType
+│       ├── XdDecimalListType
+│       ├── XdDoubleListType
+│       ├── XdIntegerListType
+│       ├── XdNonNegativeIntegerListType
+│       └── XdPositiveIntegerListType
 ├── XdTemporalType
 ├── XdLinkType
 ├── XdFileType
@@ -1046,12 +1058,7 @@ XdAnyType (base type - provides label, access control, temporal + spatial metada
 ├── ReferenceRangeType
 ├── XdBooleanListType
 ├── XdStringListType
-├── XdTokenListType
-├── XdDecimalListType
-├── XdDoubleListType
-├── XdIntegerListType
-├── XdNonNegativeIntegerListType
-└── XdPositiveIntegerListType
+└── XdTokenListType
 
 ExceptionalValueType (abstract, standalone - 16 ISO 21090 null-flavor subtypes:
     NIType, MSKType, INVType, DERType, UNCType, OTHType, NINFType, PINFType,
@@ -1114,7 +1121,7 @@ Data quality, the third SDC pillar, is handled explicitly rather than with impli
 
 ### **A.16. List Types**
 
-SDC provides list datatypes for whitespace-delimited sequences of primitive values, for the efficient storage and transmission of many related values in one field. Each `Xd<Type>ListType` extends `XdAnyType` (so it carries `label` and the standard metadata) and adds a single value element, `xd<type>list-value`, typed as the corresponding `*ListSimpleType` (an `xsd:list` of the item type).
+SDC provides list datatypes for whitespace-delimited sequences of primitive values, for the efficient storage and transmission of many related values in one field. Each `Xd<Type>ListType` adds a single value element, `xd<type>list-value`, typed as the corresponding `*ListSimpleType` (an `xsd:list` of the item type), and carries the standard `XdAnyType` metadata such as `label`. They split by base type: the **non-quantified** lists (`XdBooleanListType`, `XdStringListType`, `XdTokenListType`) extend `XdAnyType`; the **quantified** lists (`XdDecimalListType`, `XdDoubleListType`, `XdIntegerListType`, `XdNonNegativeIntegerListType`, `XdPositiveIntegerListType`) extend `XdQuantifiedType`, and so additionally carry units and magnitude metadata.
 
 | Type | Value element | Item type |
 |------|---------------|-----------|
