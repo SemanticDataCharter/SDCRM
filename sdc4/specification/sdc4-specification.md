@@ -174,16 +174,18 @@ The DMType serves as the root element for every SDC data instance. Its primary r
 | source\_instance\_id | xsd:string | 0..1 | Identifier of this data instance in the originating source system (e.g., Epic, SAP). Enables auditable data lineage across system boundaries. |
 | source\_version\_id | xsd:string | 0..1 | Version identifier from the originating source system. Paired with source\_instance\_id, provides a complete reference to the exact upstream version ingested. |
 | current-state | xsd:string | 0..1 | The current state according to the workflow defined in the workflow element. |
-| Item (ref) | ItemType | 1..1 | The data payload: an element in the `Item` substitution group (a `ClusterType` or `XdAdapterType`). In an instance this is the concrete `ms-<CUID2>` element that substitutes for `Item`. |
+| *(data payload)* | `ref="sdc4:Item"` | 1..1 | The model's root data component. The RM references the abstract `Item` substitution-group head; a Data Model restricts it to the model's root component, so in an instance the node is that component's `ms-<CUID2>` element. There is no literal `data` or `Item` element. See the note after this table. |
 | subject | PartyType | 0..1 | Identity of the human subject of the data (patient, customer, etc.). |
 | provider | PartyType | 0..* | Source of the information (clinician, device, software, etc.). |
-| participations | ParticipationType (ref) | 0..* | Other participations in the data activity. |
+| Participation | `ref="sdc4:Participation"` | 0..* | Other participations in the data activity. |
 | protocol | XdStringType | 0..1 | External identifier of the protocol used when collecting the data. |
 | workflow | ClusterType | 0..1 | Workflow definition for this data model, containing state definitions, transitions, and execution logic. |
 | acs | XdLinkType | 0..1 | Identifier of an externally held access control system. |
-| audit | AuditType (ref) | 0..* | Audit trail entries from systems that have interacted with the data. |
+| Audit | `ref="sdc4:Audit"` | 0..* | Audit trail entries from systems that have interacted with the data. |
 | attestation | AttestationType | 0..1 | Attestation record verifying the data instance. |
-| links | XdLinkType (ref) | 0..* | Optional links to other locatable structures or external entities. |
+| XdLink | `ref="sdc4:XdLink"` | 0..* | Optional links to other locatable structures or external entities. |
+
+**A note on the data payload.** The reference model does not give the payload a fixed element name. It references the abstract `Item` substitution-group head (`ref="sdc4:Item"`), and a Data Model restricts that reference to its root component, a `ClusterType` or `XdAdapterType` published under a permanent `ms-<CUID2>` name (Section 4.4). So in an instance the payload node *is* that `ms-<CUID2>` element; there is no `data` or `Item` element to find. This is deliberate: SDC carries component identity in the **element name**, not in an `xsi:type` attribute or a generic wrapper. That is what makes an instance self-describing and queryable by component (Section 4.4) and underpins the resolvability guarantees of Section 4.6, and it is what lets a `ClusterType` hold several distinctly-named child components rather than a run of indistinguishable generic nodes. The same pattern explains the `Participation`, `Audit`, and `XdLink` rows above: those reference concrete global elements, so their instance node names are fixed, whereas the payload's is supplied by the substituting component.
 
 #### **4.3.1.1. Workflow and State Machine Capabilities**
 
