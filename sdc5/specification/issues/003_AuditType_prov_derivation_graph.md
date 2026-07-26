@@ -37,6 +37,17 @@ AuditType
         └── agent    (0..unbounded) -> prov:Agent     (wasAssociatedWith / actedOnBehalfOf)
 ```
 
+## Considered alternative (rejected): nest the graph under `system-user.party-details`
+
+Since `AuditType.system-user` is a `PartyType` and `PartyType` has a `party-details` (ClusterType) slot, one could nest the PROV-O cluster there instead of in `Item` — keeping provenance structurally inside `AuditType` without waiting for SDC5. **Weighed and rejected.** It is a worse home than `Item`, for four reasons:
+
+1. **Misleading container semantics.** `party-details` is defined as "a structured element for details about the party." A PROV-O graph is not details about a party; it is a graph of Entities, Activities, and Agents in which the party is *one node*. Nesting it there asserts that the Entity acted on and the Activity performed are attributes of the `system-user`. This is the same misleading-container defect Issue 002 raises for `location` ("site/facility"), but sharper, since Entity and Activity have no relation to the actor. `Item` is a *neutral* container; `party-details` is a *committed* one that says the wrong thing.
+2. **Agent redundancy / circularity.** In PROV-O, `system-user` (PartyType) already *is* the `prov:Agent`. A PROV-O cluster contains its own `prov:Agent` node, so nesting it under `system-user` puts an agent inside the details of the agent — two agents with no clear authority between them.
+3. **Scope and cardinality mismatch.** `Audit` is `{0,unbounded}` and each entry is one handling event; `system-user` is `{0,1}` per entry. The derivation graph is about the record's lineage *as a whole*, not one handling event's single actor. Attaching a whole-record graph to one audit entry's one party scopes it wrongly and fragments it if multiple audit entries each carry provenance.
+4. **Emphasis inversion.** For the agentic-governance driver the payload is "what Entity was derived from what, via what Activity"; the Agent is secondary. Hanging the graph off the Agent buries the part that matters.
+
+**Conclusion:** every in-`AuditType` home available in SDC4 (`location` or `system-user.party-details`) is a misleading container — which is precisely why this issue holds that `AuditType` *lacks* the slot. The correct SDC5 fix is a native `provenance` element as a **sibling of `system-user`** on `AuditType` (as sketched above), not nested inside it. For SDC4, `Item` remains the least-wrong neutral home.
+
 ## Note: the three AuditType issues converge
 
 This is the **third** AuditType issue (001 validation-details, 002 action/outcome, 003 derivation graph). Individually each is a slot addition; together they indicate `AuditType` should be reconsidered **holistically** in SDC5 as a first-class, PROV-O-aligned provenance record rather than incrementally patched. Recommend an SDC5 **"AuditType 2.0" design pass** that folds in all three (validation, action/outcome for the audit-only case, and the derivation graph) in one coherent structure, rather than three independent additions.
