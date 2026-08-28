@@ -1,6 +1,6 @@
 # **Semantic Data Charter (SDC) Specification**
 
-## **Version 1.0 - October 20, 2025**
+## **Version 4.0.0 - October 20, 2025**
 
 **This version:**
 
@@ -26,6 +26,12 @@ The SDC is founded on three core pillars:
 * **Mandate Quality:** Formally define rules for handling imperfect data.
 
 This specification provides the technical details of the SDC Reference Model, which is implemented in XML Schema (XSD) and OWL (Web Ontology Language).
+
+### **1.1. Notational Conventions**
+
+The key words **MUST**, **MUST NOT**, **REQUIRED**, **SHALL**, **SHALL NOT**, **SHOULD**, **SHOULD NOT**, **RECOMMENDED**, **MAY**, and **OPTIONAL** in this document are to be interpreted as described in [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) and [RFC 8174](https://www.rfc-editor.org/rfc/rfc8174) when, and only when, they appear in all capitals.
+
+The **normative** artifact of SDC4 is the reference model schema `sdc4.xsd`; this document *describes* it. Where this document and the schema disagree, the schema governs. Material marked *informative*, including the modeling examples (Section 5) and the mapping, decision-tree, and best-practice material in Appendix A, illustrates usage and adds no conformance requirements.
 
 ## 
 
@@ -58,10 +64,34 @@ By providing a consistent, machine-readable framework for governance, semantics,
 
 ## **3\. Conformance**
 
-Conformance to the Semantic Data Charter is defined at two levels:
+Conformance is defined against three targets: a Data Model, an instance, and a processor.
 
-* **SDC Reference Model Conformance:** A data model conforms to the SDC Reference Model if its defining XML Schema is a valid xsd:restriction of the SDC Reference Model (sdc4.xsd). Data models **MUST NOT** use xsd:extension to add new elements or attributes to the SDC types. Conformance requires that both the data model schema itself is valid and that any data instance successfully validates against that restricted schema.  
-* **SDC Principles Conformance:** An organization's data practices conform to the SDC principles if they adhere to the governance, meaning, and quality pillars outlined in this document.
+### **3.1. Conformant Data Model**
+
+An XML Schema is a **conformant SDC4 Data Model** if and only if:
+
+- it defines its components solely by `xsd:restriction` of the SDC4 reference model types, and **MUST NOT** use `xsd:extension` to add elements or attributes to any SDC4 type;
+- it is itself a valid XSD 1.1 schema; and
+- every component it defines resolves, through a chain of restrictions, to a reference-model type.
+
+A conformant Data Model can be checked mechanically against the reference model (for example, with the `sdcvalidator` schema-compliance check).
+
+### **3.2. Conformant Instance**
+
+An XML document is a **conformant SDC4 instance** if and only if:
+
+- it validates against a conformant SDC4 Data Model (Section 3.1); and
+- it carries an `instance_id` (a CUID2), which is **REQUIRED** on every instance.
+
+Instances conform to their Data Model schema, not to `sdc4.xsd` directly.
+
+### **3.3. Conformant Processor**
+
+Software is a **conformant SDC4 processor** to the extent that it preserves the guarantees above: it **MUST** reject a Data Model that applies `xsd:extension` to an SDC4 type, **MUST** treat `sdc4.xsd` as normative where documentation and schema disagree, and **MUST NOT** silently discard `ExceptionalValue`, provenance, or identity elements when reading, transforming, or emitting instances.
+
+### **3.4. Principles Conformance**
+
+Beyond the mechanical targets above, an organization's data practices conform to the SDC principles when they uphold the three pillars, governance, meaning, and quality, described in this specification.
 
 ## 
 
@@ -76,17 +106,20 @@ The SDC architecture is composed of the following key components:
 
 ### **4.1. Core Data Types**
 
-The SDC Reference Model provides a rich set of extended data types (Xd\* types) that go beyond the standard XML Schema data types. These include:
+The SDC Reference Model provides a rich set of extended data types (Xd\* types) that go beyond the standard XML Schema data types. The complete set, with its inheritance, is given in Appendix A (see A.14 for the hierarchy). The datatypes are:
 
-* XdAnyType: The base type for all SDC extended data types.  
-* XdStringType, XdTokenType: For textual data.  
-* XdBooleanType: For boolean values.  
-* XdCountType, XdQuantityType, XdFloatType, XdDoubleType: For numeric data.  
-* XdTemporalType: For date and time information.  
-* XdLinkType: For creating relationships between data models.  
-* XdFileType: For embedding or referencing binary data.  
-* ClusterType: For grouping related data elements.  
-* XdAdapterType: For adapting any Xd\* type for use within a ClusterType.
+* **Base and abstract:** XdAnyType (the base of every Xd\* type), and the abstract intermediates XdOrderedType (ordering and reference ranges) and XdQuantifiedType (units and magnitude metadata).
+* **Textual:** XdStringType, XdTokenType.
+* **Boolean:** XdBooleanType.
+* **Numeric (quantified):** XdCountType, XdQuantityType, XdFloatType, XdDoubleType.
+* **Ordinal:** XdOrdinalType.
+* **Temporal:** XdTemporalType.
+* **Link:** XdLinkType.
+* **File:** XdFileType.
+* **Interval and reference range:** XdIntervalType, ReferenceRangeType.
+* **List types (8):** XdBooleanListType, XdStringListType, XdTokenListType, XdDecimalListType, XdDoubleListType, XdIntegerListType, XdNonNegativeIntegerListType, XdPositiveIntegerListType.
+
+The **structural** components that assemble these into a Data Model, ItemType, ClusterType, and XdAdapterType, are described in Appendix A.18; the DMType instance root is detailed in Section 4.3.1.
 
 ### 
 
@@ -100,10 +133,10 @@ The SDC Reference Model includes a comprehensive set of components for capturing
 
 Governance components define the actors, roles, and responsibilities associated with the data.
 
-* **PartyType**: Represents an actor involved with the data, which can be a person, organization, device, or software application.  
-* **ParticipationType**: Describes the role of a PartyType in a specific activity related to the data.  
-* **AttestationType**: Provides a formal mechanism for a party to attest to the data's content.  
-* **AuditType**: Captures a detailed audit trail of every system and user that has interacted with the data.  
+* **PartyType**: An actor involved with the data (person, organization, device, or software). Elements: `party-name` (string), `party-ref` (an XdLink to an external identity), and `party-details` (a Cluster for structured detail).  
+* **ParticipationType**: The role a party plays in an activity. Elements: `performer` (a Party), `function` and `mode` (XdString), and `start`/`end` (dateTime).  
+* **AttestationType**: A formal attestation of the data's content. Elements: `view` and `proof` (XdFile), `reason` (XdString), `committer` (a Party), `committed` (dateTime), and `pending` (boolean).  
+* **AuditType**: An audit-trail entry for one system or user interaction. Elements: `system-id` (XdString), `system-user` (a Party), `location` (a Cluster), and `timestamp` (dateTime).  
 * **Access Control**: The model supports linking to external access control systems via the acs element and allows for fine-grained control via the act (Access Control Tag) element.
 
 #### 
@@ -114,6 +147,7 @@ Provenance components provide a complete history of the data's origin, creation,
 
 * **Instance Metadata**: The root DMType contains key provenance fields: instance\_id (mandatory, CUID2), instance\_version, source\_instance\_id, source\_version\_id, creation\_timestamp, subject, and provider.  
 * **Temporal Validity**: Every data element (XdAnyType) contains optional timestamp fields to track its lifecycle: vtb (Valid Time Begin), vte (Valid Time End), tr (Time Recorded), and modified.
+* **Spatial Context**: Every data element (XdAnyType) may also carry optional `latitude` and `longitude` (decimal, constrained to ±90 and ±180 respectively), locating the datum in space at the point of capture. Together with the temporal fields this gives every element optional spatio-temporal context.
 
 ### 
 
@@ -140,16 +174,18 @@ The DMType serves as the root element for every SDC data instance. Its primary r
 | source\_instance\_id | xsd:string | 0..1 | Identifier of this data instance in the originating source system (e.g., Epic, SAP). Enables auditable data lineage across system boundaries. |
 | source\_version\_id | xsd:string | 0..1 | Version identifier from the originating source system. Paired with source\_instance\_id, provides a complete reference to the exact upstream version ingested. |
 | current-state | xsd:string | 0..1 | The current state according to the workflow defined in the workflow element. |
-| data | ItemType (ref) | 1..1 | The data structure of the model (substitution group: Item). |
+| *(data payload)* | `ref="sdc4:Item"` | 1..1 | The model's root data component. The RM references the abstract `Item` substitution-group head; a Data Model restricts it to the model's root component, so in an instance the node is that component's `ms-<CUID2>` element. There is no literal `data` or `Item` element. See the note after this table. |
 | subject | PartyType | 0..1 | Identity of the human subject of the data (patient, customer, etc.). |
 | provider | PartyType | 0..* | Source of the information (clinician, device, software, etc.). |
-| participations | ParticipationType (ref) | 0..* | Other participations in the data activity. |
+| Participation | `ref="sdc4:Participation"` | 0..* | Other participations in the data activity. |
 | protocol | XdStringType | 0..1 | External identifier of the protocol used when collecting the data. |
 | workflow | ClusterType | 0..1 | Workflow definition for this data model, containing state definitions, transitions, and execution logic. |
 | acs | XdLinkType | 0..1 | Identifier of an externally held access control system. |
-| audit | AuditType (ref) | 0..* | Audit trail entries from systems that have interacted with the data. |
+| Audit | `ref="sdc4:Audit"` | 0..* | Audit trail entries from systems that have interacted with the data. |
 | attestation | AttestationType | 0..1 | Attestation record verifying the data instance. |
-| links | XdLinkType (ref) | 0..* | Optional links to other locatable structures or external entities. |
+| XdLink | `ref="sdc4:XdLink"` | 0..* | Optional links to other locatable structures or external entities. |
+
+**A note on the data payload.** The reference model does not give the payload a fixed element name. It references the abstract `Item` substitution-group head (`ref="sdc4:Item"`), and a Data Model restricts that reference to its root component, a `ClusterType` or `XdAdapterType` published under a permanent `ms-<CUID2>` name (Section 4.4). So in an instance the payload node *is* that `ms-<CUID2>` element; there is no `data` or `Item` element to find. This is deliberate: SDC carries component identity in the **element name**, not in an `xsi:type` attribute or a generic wrapper. That is what makes an instance self-describing and queryable by component (Section 4.4) and underpins the resolvability guarantees of Section 4.6, and it is what lets a `ClusterType` hold several distinctly-named child components rather than a run of indistinguishable generic nodes. The same pattern explains the `Participation`, `Audit`, and `XdLink` rows above: those reference concrete global elements, so their instance node names are fixed, whereas the payload's is supplied by the substituting component.
 
 #### **4.3.1.1. Workflow and State Machine Capabilities**
 
@@ -227,6 +263,19 @@ Unlike traditional approaches, which often break backward compatibility and requ
 ## 
 
 ## 
+
+### **4.6. Identifiers and Federated Resolvability**
+
+SDC4 identifies every model component and every data instance with a **CUID2**, a collision-resistant identifier that can be minted offline, with no central registry and no coordination between parties. This gives SDC identity three properties at once: it is **federated** (parties who have never met assign identifiers independently without collision), **permanent** (an identifier, once assigned, never changes), and **resolvable** (each identifier maps to a typed, dereferenceable URI).
+
+**Identifier forms.**
+
+- **Instance identity.** Every instance carries an `instance_id` (**REQUIRED**, a CUID2). Optional `instance_version`, `source_instance_id`, and `source_version_id` (Section 4.3.1) record versioning and lineage back to an originating system.
+- **Component identity.** A reusable Model Component type is named `mc-<CUID2>`, the element that carries it is named `ms-<CUID2>`, and a Data Model root is named `dm-<CUID2>` (Section 4.4). These names are permanent: the structure bound to a given `ms-<CUID2>` never changes (Section 4.5).
+
+**Typed, resolvable namespace.** Reference-model and model URIs live under a versioned namespace, `https://semanticdatacharter.com/ns/sdc4/`, served over HTTP so that a processor can dereference a schema or component URI directly. Because the namespace is versioned (`.../ns/sdc4/`, and in future `.../ns/sdc5/`), successor reference models are published *alongside* their predecessors, not on top of them.
+
+**Permanence across reference-model versions.** When a new reference model is released it is published at a new versioned namespace; the previous namespace and every schema under it continue to resolve and validate unchanged. An SDC4 package therefore keeps working after SDC5 deploys: its identifiers still resolve, and its instances still validate against the SDC4 schema they were built against. The identifier and namespace resolve an element's *meaning* globally; access to the *data* itself remains governed separately through the access-control elements (`acs`, `act`; Section 4.2.1).
 
 ## **5\. Modeling Examples**
 
@@ -418,10 +467,12 @@ This appendix provides a comprehensive reference for all SDC4 extended data type
 
 SDC4 provides semantically rich extended data types that enhance basic data values with governance, provenance, and constraint information. Each Xd* type consists of:
 
-- **Value Component**: The actual data value (e.g., `xdstring-value`, `xdcount-value`)
+- **Value or Parts**: A scalar type carries its data in a type-prefixed value element (e.g., `xdstring-value`, `xdcount-value`); a structured type carries semantically-named parts instead (see the naming convention below)
 - **Type Class**: The corresponding complexType definition (e.g., `XdStringType`, `XdCountType`)
 - **Constraint Capabilities**: Available validation rules specific to the type
-- **Metadata Support**: Inherited from `XdAnyType` (label, definition, temporal validity, access control)
+- **Metadata Support**: Inherited from `XdAnyType` (label, access control, temporal and spatial validity, and exceptional values)
+
+**Element Naming Convention.** A *single-value* (scalar) Xd type exposes its payload with a type-prefixed name, `xd<type>-value` (for example `xdstring-value`, `xdcount-value`, `xdquantity-value`), plus the modifiers `xd<type>-units` and `xd<type>-language` where applicable. A *structured* Xd type, one whose parts each carry their own distinct meaning, names those parts semantically instead, because there is no single payload value: `XdBoolean` uses a `true-value`/`false-value` choice; `XdOrdinal` uses `ordinal` and `symbol`; `XdLink` uses `link`, `relation`, and `relation-uri`; `XdFile` uses `size`, `media-type`, `uri`/`media-content`, and related metadata; `XdInterval` uses `lower`, `upper`, and the boundary flags. In short: scalar types carry a typed `-value`; structured types carry semantically-named parts. Do not apply an `xd<type>-` prefix to a structured type's elements.
 
 ### **A.2. Textual Data Types**
 
@@ -519,11 +570,13 @@ SDC4 provides semantically rich extended data types that enhance basic data valu
 - Consent indicators (GDPR, medical consent)
 - Status indicators (active/inactive, enabled/disabled)
 
+**Structure**: `XdBooleanType` records its value through an `xsd:choice` of `true-value` and `false-value` (both `xsd:string`). Exactly one is present in an instance; the element that appears indicates the state, and its content is the enumerated option label defined in the Data Model (for example "Yes"/"No" or "Granted"/"Denied"). This forces the value into one of the two carefully-defined options rather than an implicit boolean.
+
 **Example Instance**:
 ```xml
 <sdc4:ms-consent-given>
   <sdc4:label>Patient Consent Given</sdc4:label>
-  <sdc4:xdboolean-value>true</sdc4:xdboolean-value>
+  <sdc4:true-value>Granted</sdc4:true-value>
 </sdc4:ms-consent-given>
 ```
 
@@ -533,7 +586,13 @@ SDC4 provides semantically rich extended data types that enhance basic data valu
 
 ### **A.4. Numeric Data Types**
 
-SDC4 distinguishes between **quantified** (with units) and **non-quantified** (unitless) numeric types.
+SDC4's numeric types, `XdCount`, `XdQuantity`, `XdFloat`, and `XdDouble`, all extend `XdQuantifiedType`, which adds an optional units element and measurement-quality metadata to the value.
+
+**Quantified metadata (shared by all four numeric types via `XdQuantifiedType`):**
+
+- `magnitude-status` (`MagnitudeStatus`): how the recorded magnitude relates to the true value, one of `equal`, `less_than`, `greater_than`, `less_than_or_equal`, `greater_than_or_equal`, or `approximate` (for example, a reading recorded as "less than 140").
+- `accuracy_margin` (`xsd:decimal`): the accuracy margin of the measurement.
+- `precision_digits` (`xsd:nonNegativeInteger`): the number of significant digits of precision.
 
 #### **A.4.1. XdCount / XdCountType**
 
@@ -725,14 +784,14 @@ SDC4 distinguishes between **quantified** (with units) and **non-quantified** (u
 - Educational levels (elementary=1, high school=2, college=3)
 - Likert scales (strongly disagree=1, disagree=2, neutral=3, agree=4, strongly agree=5)
 
+**Structure**: `XdOrdinalType` has two required children: `ordinal` (`xsd:decimal`, the ordered numeric code) and `symbol` (`xsd:string`, the display label for that code). As an ordered type it also inherits the optional `normal-status` and one or more `ReferenceRange` elements from `XdOrderedType` (see the Reference Ranges section).
+
 **Example**:
 ```xml
 <sdc4:ms-pain-level>
   <sdc4:label>Pain Severity</sdc4:label>
-  <sdc4:xdordinal-value>2</sdc4:xdordinal-value>
-  <sdc4:xdordinal-symbol>
-    <sdc4:xdstring-value>Moderate</sdc4:xdstring-value>
-  </sdc4:xdordinal-symbol>
+  <sdc4:ordinal>2</sdc4:ordinal>
+  <sdc4:symbol>Moderate</sdc4:symbol>
 </sdc4:ms-pain-level>
 ```
 
@@ -764,12 +823,15 @@ SDC4 distinguishes between **quantified** (with units) and **non-quantified** (u
 - API endpoint references
 - Hyperlinks to related resources
 
+**Structure**: `XdLinkType` has three children: `link` (`xsd:anyURI`, optional, the target address), `relation` (`xsd:string`, required, the human-readable relationship term), and `relation-uri` (`xsd:anyURI`, optional, a URI that formally defines the relation's semantics).
+
 **Example**:
 ```xml
 <sdc4:ms-patient-reference>
   <sdc4:label>Related Patient</sdc4:label>
-  <sdc4:xdlink-uri>dm-patient-clj5x9z...</sdc4:xdlink-uri>
-  <sdc4:xdlink-relationship>subject_of</sdc4:xdlink-relationship>
+  <sdc4:link>dm-patient-clj5x9z...</sdc4:link>
+  <sdc4:relation>subject_of</sdc4:relation>
+  <sdc4:relation-uri>http://purl.org/dc/terms/subject</sdc4:relation-uri>
 </sdc4:ms-patient-reference>
 ```
 
@@ -795,12 +857,14 @@ SDC4 distinguishes between **quantified** (with units) and **non-quantified** (u
 - Hash algorithm specification (`hash_function`)
 - Storage location (embedded vs. referenced)
 
-**Metadata Included**:
-- Original filename
-- MIME type / media type
-- File size
-- Hash for integrity verification (SHA-256, SHA-512, etc.)
-- Compression algorithm (if compressed)
+**Metadata Included** (all optional; the content is a required choice):
+- `media-type` — MIME type
+- `size` — size in bytes
+- `encoding` — character encoding
+- `compression-type` — compression algorithm, if compressed
+- `hash-result` and `hash-function` — integrity hash and its algorithm
+- `formalism`, `xdfile-language`, `alt-txt` — content formalism, language, and alternate text
+- Content is an `xsd:choice` of `uri` (external reference) or `media-content` (embedded `xsd:base64Binary`)
 
 **Use Cases**:
 - Document attachments (PDFs, Word docs, spreadsheets)
@@ -809,15 +873,15 @@ SDC4 distinguishes between **quantified** (with units) and **non-quantified** (u
 - Encrypted files with hash verification
 - Archived data
 
-**Example**:
+**Example** (elements follow the schema sequence order):
 ```xml
 <sdc4:ms-patient-photo>
   <sdc4:label>Patient Photograph</sdc4:label>
-  <sdc4:xdfile-media-type>image/jpeg</sdc4:xdfile-media-type>
-  <sdc4:xdfile-uri>file:///patient-photos/12345.jpg</sdc4:xdfile-uri>
-  <sdc4:xdfile-size>245760</sdc4:xdfile-size>
-  <sdc4:xdfile-hash-function>SHA-256</sdc4:xdfile-hash-function>
-  <sdc4:xdfile-hash-result>a3f5b...</sdc4:xdfile-hash-result>
+  <sdc4:size>245760</sdc4:size>
+  <sdc4:media-type>image/jpeg</sdc4:media-type>
+  <sdc4:hash-result>a3f5b...</sdc4:hash-result>
+  <sdc4:hash-function>SHA-256</sdc4:hash-function>
+  <sdc4:uri>file:///patient-photos/12345.jpg</sdc4:uri>
 </sdc4:ms-patient-photo>
 ```
 
@@ -837,10 +901,7 @@ SDC4 distinguishes between **quantified** (with units) and **non-quantified** (u
 - Python: Tuple, custom Range class
 - Java: Custom Range class
 
-**Interval Types Supported**:
-- **XdCountInterval**: Integer count ranges
-- **XdQuantityInterval**: Decimal quantity ranges with units
-- **XdTemporalInterval**: Date/time ranges (periods)
+**Structure**: `XdIntervalType` is a single type; there are no per-datatype interval subtypes. The `lower` and `upper` boundaries are of type `InvlType`, an `xsd:choice` that carries the boundary value in the appropriate datatype element: `invl-int`, `invl-decimal`, `invl-float`, `invl-double`, `invl-date`, `invl-time`, `invl-dateTime`, or `invl-duration`. In a Data Model this choice is constrained to one datatype, and an XSD 1.1 assertion enforces that `lower` and `upper` use the same one. Four booleans describe the boundaries: `lower_included` / `upper_included` (inclusive vs exclusive) and `lower_bounded` / `upper_bounded` (set `false` for an open, unbounded end). Optional `interval-units` carries units as a `units-name` and `units-uri` pair.
 
 **Use Cases**:
 - Normal ranges (e.g., normal blood pressure: 90-120 mmHg)
@@ -849,15 +910,24 @@ SDC4 distinguishes between **quantified** (with units) and **non-quantified** (u
 - Acceptable value ranges for validation
 - Quantity ranges (price ranges, measurement ranges)
 
-**Example (XdQuantityInterval)**:
+**Example** (a decimal interval, 90 to 120 mmHg, both bounds inclusive):
 ```xml
 <sdc4:ms-normal-systolic-range>
   <sdc4:label>Normal Systolic BP Range</sdc4:label>
-  <sdc4:xdquantity-interval-lower>90</sdc4:xdquantity-interval-lower>
-  <sdc4:xdquantity-interval-upper>120</sdc4:xdquantity-interval-upper>
-  <sdc4:xdquantity-units>
-    <sdc4:xdstring-value>mmHg</sdc4:xdstring-value>
-  </sdc4:xdquantity-units>
+  <sdc4:lower>
+    <sdc4:invl-decimal>90</sdc4:invl-decimal>
+  </sdc4:lower>
+  <sdc4:upper>
+    <sdc4:invl-decimal>120</sdc4:invl-decimal>
+  </sdc4:upper>
+  <sdc4:lower_included>true</sdc4:lower_included>
+  <sdc4:upper_included>true</sdc4:upper_included>
+  <sdc4:lower_bounded>true</sdc4:lower_bounded>
+  <sdc4:upper_bounded>true</sdc4:upper_bounded>
+  <sdc4:interval-units>
+    <sdc4:units-name>mmHg</sdc4:units-name>
+    <sdc4:units-uri>http://unitsofmeasure.org/ucum#mm[Hg]</sdc4:units-uri>
+  </sdc4:interval-units>
 </sdc4:ms-normal-systolic-range>
 ```
 
@@ -865,33 +935,49 @@ SDC4 distinguishes between **quantified** (with units) and **non-quantified** (u
 
 ---
 
+### **A.9.2. Reference Ranges (ReferenceRangeType)**
+
+Reference ranges attach named, context-sensitive value ranges to any *ordered* datatype (XdOrdinal, XdCount, XdQuantity, XdFloat, XdDouble, XdTemporal). They express meaningful bands, normal, critical, therapeutic, dangerous, and so on, each defined by an interval and sensitive to context such as sex, age, or location.
+
+Every `XdOrderedType` (the abstract base of the ordered datatypes) carries two optional children for this:
+
+- `ReferenceRange` (0..unbounded): one or more named ranges. `ReferenceRange` is a substitution-group member of `XdAny`, so it also carries `XdAnyType` metadata such as `label`.
+- `normal-status` (`xsd:string`, 0..1): the status of the instance value relative to those ranges.
+
+A `ReferenceRangeType` has three required children:
+
+- `definition` (`xsd:string`): the meaning of the range, for example `normal`, `critical`, or `therapeutic`.
+- `interval` (`XdIntervalType`): the value range (see A.9.1).
+- `is-normal` (`xsd:boolean`, default `false`): `true` if values in this range are considered normal in the context of `definition`.
+
+Because each range carries its own interval (with its own `interval-units`), a single ordered element can hold several ranges expressed in different unit systems, for example a temperature range in Celsius and another in Fahrenheit.
+
+**Example** (a normal systolic blood-pressure range):
+```xml
+<sdc4:ReferenceRange>
+  <sdc4:label>Normal Range</sdc4:label>
+  <sdc4:definition>normal</sdc4:definition>
+  <sdc4:interval>
+    <sdc4:lower><sdc4:invl-decimal>90</sdc4:invl-decimal></sdc4:lower>
+    <sdc4:upper><sdc4:invl-decimal>120</sdc4:invl-decimal></sdc4:upper>
+    <sdc4:lower_included>true</sdc4:lower_included>
+    <sdc4:upper_included>true</sdc4:upper_included>
+    <sdc4:lower_bounded>true</sdc4:lower_bounded>
+    <sdc4:upper_bounded>true</sdc4:upper_bounded>
+    <sdc4:interval-units>
+      <sdc4:units-name>mmHg</sdc4:units-name>
+      <sdc4:units-uri>http://unitsofmeasure.org/ucum#mm[Hg]</sdc4:units-uri>
+    </sdc4:interval-units>
+  </sdc4:interval>
+  <sdc4:is-normal>true</sdc4:is-normal>
+</sdc4:ReferenceRange>
+```
+
+---
+
 ### **A.10. Type Selection Decision Tree**
 
-Use this decision tree to select the appropriate Xd* type:
-
-**1. Is the data textual?**
-- **Yes**: XdString (or XdToken for normalized codes)
-
-**2. Is the data boolean (true/false)?**
-- **Yes**: XdBoolean
-
-**3. Is the data numeric?**
-- **Yes, whole numbers only (counts)**: XdCount
-- **Yes, decimal values with units**: XdQuantity
-- **Yes, scientific floating-point**: XdFloat or XdDouble
-- **Yes, ordered categorical**: XdOrdinal
-
-**4. Is the data temporal (date/time)?**
-- **Yes**: XdTemporal
-
-**5. Is the data a reference or link?**
-- **Yes**: XdLink
-
-**6. Is the data binary or a file?**
-- **Yes**: XdFile
-
-**7. Is the data a range or interval?**
-- **Yes**: XdInterval (XdCountInterval, XdQuantityInterval, or XdTemporalInterval)
+*(Informative.)* Moved to a guide: see [`sdc4/guides/type-selection.md`](../guides/type-selection.md) for the datatype decision tree.
 
 ---
 
@@ -904,93 +990,59 @@ Use this decision tree to select the appropriate Xd* type:
 | XdBoolean    | -          | -               | -                 | -               | -         | Default value |
 | XdCount      | -          | ✓ (min/max)     | -                 | -               | ✓         | Non-negative integers |
 | XdQuantity   | -          | ✓ (min/max)     | -                 | -               | ✓ (required) | Precision, scale |
-| XdFloat      | -          | ✓ (min/max)     | -                 | -               | -         | IEEE 754 single |
-| XdDouble     | -          | ✓ (min/max)     | -                 | -               | -         | IEEE 754 double |
+| XdFloat      | -          | ✓ (min/max)     | -                 | -               | ✓         | IEEE 754 single |
+| XdDouble     | -          | ✓ (min/max)     | -                 | -               | ✓         | IEEE 754 double |
 | XdTemporal   | -          | ✓ (min/max)     | ✓ (ISO 8601)       | -               | -         | Granularity, timezone |
 | XdOrdinal    | -          | ✓ (defined set) | -                 | ✓ (ordered)     | -         | Code + label pairs |
 | XdLink       | -          | -               | ✓ (URI)            | ✓ (target types) | -         | Relationship semantics |
 | XdFile       | ✓ (size)   | -               | ✓ (MIME type)      | -               | -         | Hash, compression |
-| XdInterval   | -          | ✓ (bounds)      | -                 | -               | ✓ (for Quantity) | Inclusive/exclusive |
+| XdInterval   | -          | ✓ (bounds)      | -                 | -               | ✓ (optional) | Inclusive/exclusive, bounded/unbounded |
 
 ---
 
 ### **A.12. Common Datatype Mapping Examples**
 
-#### **CSV/Spreadsheet to Xd* Types**
-
-| **CSV Data** | **Example Value** | **Xd* Type** | **Reasoning** |
-|--------------|-------------------|--------------|---------------|
-| Name, Address, Description | "John Doe" | XdString | Free-text character data |
-| Country Code, Product SKU | "US", "SKU-12345" | XdString (with enumeration or pattern) | Controlled codes |
-| Enabled, Active, Consented | "true", "yes", "1" | XdBoolean | Boolean logic |
-| Quantity, Count, Number of Items | 42, 1000 | XdCount | Non-negative integers |
-| Price, Weight, Temperature | 19.99, 72.5 | XdQuantity | Decimal with units |
-| Date, DateTime, Timestamp | "2025-11-09", "2025-11-09T15:30:00Z" | XdTemporal | Temporal data |
-| Priority, Severity, Rating | "High", "Severe" | XdOrdinal | Ordered categories |
-| Email, URL, Reference ID | "user@example.com" | XdString (with regex pattern) | Formatted strings |
-
-#### **Database Column to Xd* Types**
-
-| **SQL Type** | **Xd* Type** | **Notes** |
-|--------------|--------------|-----------|
-| VARCHAR, CHAR, TEXT | XdString | General text |
-| BOOLEAN, BIT | XdBoolean | Boolean values |
-| INTEGER, SMALLINT, BIGINT | XdCount | Non-negative counts; use XdQuantity if negative values allowed |
-| DECIMAL, NUMERIC | XdQuantity | Quantities with units |
-| REAL, FLOAT(24) | XdFloat | Single-precision floating-point |
-| DOUBLE PRECISION, FLOAT(53) | XdDouble | Double-precision floating-point |
-| DATE, TIMESTAMP | XdTemporal | Temporal data |
-| ENUM (ordered) | XdOrdinal | Ordered enumerations |
-| BLOB, BYTEA | XdFile | Binary data |
-| Foreign Key, URI column | XdLink | References to other entities |
+*(Informative.)* Moved to a guide: see [`sdc4/guides/datatype-mapping.md`](../guides/datatype-mapping.md) for CSV, SQL, and cross-language mappings to Xd\* types.
 
 ---
 
 ### **A.13. Best Practices**
 
-1. **Always Use Units for Quantified Types**: XdCount and XdQuantity require units. Even if units seem obvious (e.g., "items"), specify them explicitly.
-
-2. **Choose Appropriate Numeric Types**:
-   - Use **XdCount** for non-negative integer counts
-   - Use **XdQuantity** for decimal measurements with units
-   - Use **XdFloat/XdDouble** only for scientific calculations where floating-point representation is required
-   - Avoid XdFloat/XdDouble for financial data (use XdQuantity with DECIMAL instead)
-
-3. **Leverage Constraints**: Define constraints in the schema (regex patterns, min/max values, enumerations) to ensure data quality.
-
-4. **Use XdOrdinal for Ordered Categories**: If categories have meaningful order (severity, priority), use XdOrdinal instead of XdString.
-
-5. **Embed Semantics in Labels**: Use the fixed `label` element in schema definitions to provide immutable semantic meaning.
-
-6. **Temporal Granularity**: XdTemporal supports various granularities. Choose the appropriate level (date only, datetime, etc.) based on requirements.
-
-7. **File Integrity**: When using XdFile, always include hash values for integrity verification, especially for medical or financial documents.
-
-8. **Link Relationships**: When using XdLink, specify the relationship semantics (e.g., "subject_of", "part_of", "derived_from") for clarity.
+*(Informative.)* Moved to a guide: see [`sdc4/guides/best-practices.md`](../guides/best-practices.md) for SDC4 modeling best practices.
 
 ---
 
 ### **A.14. Xd* Type Inheritance Hierarchy**
 
 ```
-XdAnyType (base type - provides label, definition, temporal metadata, access control)
+XdAnyType (base type - provides label, access control, temporal + spatial metadata, exceptional values)
 ├── XdStringType
 ├── XdTokenType
 ├── XdBooleanType
-├── XdOrderedType (abstract - provides ordering semantics)
+├── XdOrderedType (abstract - ordering semantics, reference ranges)
 │   ├── XdOrdinalType
-│   └── XdQuantifiedType (abstract - provides units, magnitude status)
+│   └── XdQuantifiedType (abstract - units, magnitude status)
 │       ├── XdCountType
 │       ├── XdQuantityType
 │       ├── XdFloatType
-│       └── XdDoubleType
+│       ├── XdDoubleType
+│       ├── XdDecimalListType
+│       ├── XdDoubleListType
+│       ├── XdIntegerListType
+│       ├── XdNonNegativeIntegerListType
+│       └── XdPositiveIntegerListType
 ├── XdTemporalType
 ├── XdLinkType
 ├── XdFileType
-└── XdIntervalType (abstract)
-    ├── XdCountIntervalType
-    ├── XdQuantityIntervalType
-    └── XdTemporalIntervalType
+├── XdIntervalType
+├── ReferenceRangeType
+├── XdBooleanListType
+├── XdStringListType
+└── XdTokenListType
+
+ExceptionalValueType (abstract, standalone - 16 ISO 21090 null-flavor subtypes:
+    NIType, MSKType, INVType, DERType, UNCType, OTHType, NINFType, PINFType,
+    UNKType, ASKRType, NASKType, QSType, TRCType, ASKUType, NAVType, NAType)
 ```
 
 **Key Points**:
@@ -1010,15 +1062,81 @@ This appendix serves as the authoritative reference for Xd* type selection and u
 
 ## 
 
-## **7\. Reference Model Component Details**
+### **A.15. Exceptional Values (ExceptionalValueType)**
 
-This section provides a detailed explanation of the primary complexType components available in the SDC Reference Model (sdc4.xsd).
+Data quality, the third SDC pillar, is handled explicitly rather than with implicit nulls. Every SDC element (through `XdAnyType`) may carry zero or more `ExceptionalValue` elements. Their presence flags that the element's value is missing, masked, or otherwise outside the normal measurable range, **and records why**. In SDC terms, NULL is not an answer: the reason is stated, not left implicit.
 
-### 
+`ExceptionalValueType` is an abstract base with a single `ev-name` element (a short descriptive phrase). The reference model defines sixteen concrete subtypes, each an ISO 21090-aligned null flavor that fixes `ev-name` to a specific value. A Data Model restricts `ExceptionalValue` to the subtype(s) it permits, and may add further domain-specific `ExceptionalValueType` restrictions.
 
-### **7.1. Root and Structural Components**
+| Subtype | ev-name | Meaning |
+|---------|---------|---------|
+| `NIType` | No Information | Value is exceptional (missing, omitted, incomplete, improper); no information. |
+| `MSKType` | Masked | Information exists but was withheld (for example, for privacy). |
+| `INVType` | Invalid | The represented value is not a member of the permitted set. |
+| `DERType` | Derived | An actual value must be derived from the provided information. |
+| `UNCType` | Unencoded | The information was not encoded; only the raw source is present. |
+| `OTHType` | Other | The actual value is not among the permitted data values. |
+| `NINFType` | Negative Infinity | Negative infinity. |
+| `PINFType` | Positive Infinity | Positive infinity. |
+| `UNKType` | Unknown | A proper value applies but is not known. |
+| `ASKRType` | Asked and Refused | Information was sought but refused. |
+| `NASKType` | Not Asked | The information was not sought. |
+| `QSType` | Sufficient Quantity | The exact quantity is unknown but known to be non-zero and sufficient. |
+| `TRCType` | Trace | Greater or less than zero, but too small to quantify. |
+| `ASKUType` | Asked but Unknown | Information was sought but not found. |
+| `NAVType` | Not Available | Not available; the specific reason is unknown. |
+| `NAType` | Not Applicable | No proper value applies in this context. |
 
-These components form the foundational structure of any SDC Data Model.
+**Example** (an element whose value is unknown; the Data Model has restricted `ExceptionalValue` to `UNKType`, which fixes `ev-name`):
+```xml
+<sdc4:ms-patient-weight>
+  <sdc4:label>Patient Weight</sdc4:label>
+  <sdc4:ExceptionalValue>
+    <sdc4:ev-name>Unknown</sdc4:ev-name>
+  </sdc4:ExceptionalValue>
+</sdc4:ms-patient-weight>
+```
+
+---
+
+### **A.16. List Types**
+
+SDC provides list datatypes for whitespace-delimited sequences of primitive values, for the efficient storage and transmission of many related values in one field. Each `Xd<Type>ListType` adds a single value element, `xd<type>list-value`, typed as the corresponding `*ListSimpleType` (an `xsd:list` of the item type), and carries the standard `XdAnyType` metadata such as `label`. They split by base type: the **non-quantified** lists (`XdBooleanListType`, `XdStringListType`, `XdTokenListType`) extend `XdAnyType`; the **quantified** lists (`XdDecimalListType`, `XdDoubleListType`, `XdIntegerListType`, `XdNonNegativeIntegerListType`, `XdPositiveIntegerListType`) extend `XdQuantifiedType`, and so additionally carry units and magnitude metadata.
+
+| Type | Value element | Item type |
+|------|---------------|-----------|
+| `XdBooleanListType` | `xdbooleanlist-value` | `xsd:boolean` |
+| `XdStringListType` | `xdstringlist-value` | `xsd:string` |
+| `XdTokenListType` | `xdtokenlist-value` | `xsd:token` |
+| `XdDecimalListType` | `xddecimallist-value` | `xsd:decimal` |
+| `XdDoubleListType` | `xddoublelist-value` | `xsd:double` |
+| `XdIntegerListType` | `xdintegerlist-value` | `xsd:integer` |
+| `XdNonNegativeIntegerListType` | `xdnonnegativeintegerlist-value` | `xsd:nonNegativeInteger` |
+| `XdPositiveIntegerListType` | `xdpositiveintegerlist-value` | `xsd:positiveInteger` |
+
+**Example**:
+```xml
+<sdc4:ms-daily-counts>
+  <sdc4:label>Daily Counts</sdc4:label>
+  <sdc4:xdintegerlist-value>12 15 9 20 7</sdc4:xdintegerlist-value>
+</sdc4:ms-daily-counts>
+```
+
+---
+
+### **A.17. Simple Types**
+
+Beyond the complex Xd* types, the reference model defines eleven named simple types used as element datatypes:
+
+- **`lattype`** and **`lontype`** — decimal restrictions for the spatial coordinates on `XdAnyType`: latitude constrained to `[-90.000000, 90.000000]` and longitude to `[-180.000000, 180.000000]`.
+- **`MagnitudeStatus`** — the enumeration used by `XdQuantifiedType`'s `magnitude-status`, indicating how a recorded magnitude relates to the true value: `equal`, `less_than`, `greater_than`, `less_than_or_equal`, `greater_than_or_equal`, `approximate`.
+- **The eight `*ListSimpleType`s** — the `xsd:list` types backing the List datatypes (A.16): `BooleanListSimpleType`, `StringListSimpleType`, `TokenListSimpleType`, `DecimalListSimpleType`, `DoubleListSimpleType`, `IntegerListSimpleType`, `NonNegativeIntegerListSimpleType`, and `PositiveIntegerListSimpleType`, each a whitespace-delimited list of its item type.
+
+---
+
+### **A.18. Structural Components**
+
+These Item-family components assemble the datatypes above into a Data Model. They are defined by `xsd:restriction` of the reference-model types using the `mc-<CUID2>` / `ms-<CUID2>` pattern (Section 4.4); the DMType instance root is also detailed in Section 4.3.1.
 
 * **DMType**: The mandatory root element type for any SDC instance document. It acts as a wrapper for the data payload and contains instance-specific metadata.  
   **Data Model Schema Example:** This example defines the root element for a "Patient Vitals" Data Model. It restricts the base DMType, fixes the dm-label to provide the model's semantic name, and specifies that the main data payload will be a specific "Vitals Cluster" component.  
@@ -1068,68 +1186,4 @@ These components form the foundational structure of any SDC Data Model.
     \</xsd:complexContent\>  
   \</xsd:complexType\>
 
-### **7.2. Core Data Types (Xd\* Types)**
-
-These types provide semantically rich representations for common data values.
-
-* **XdStringType**: A general-purpose type for character strings.  
-  **Data Model Schema Example:** This creates a reusable component for a "Customer ID". It restricts XdStringType, fixes the label, and applies a regex pattern to the value, enforcing a specific format.  
-  \<xsd:complexType name="mc-clj5x4b1c000308l0i9j8k7l6"\>  
-    \<xsd:complexContent\>  
-      \<xsd:restriction base="sdc4:XdStringType"\>  
-        \<xsd:sequence\>  
-          \<xsd:element name="label" type="xsd:string" fixed="Customer ID"/\>  
-          ...  
-          \<xsd:element name="xdstring-value"\>  
-            \<xsd:simpleType\>  
-              \<xsd:restriction base="xsd:string"\>  
-                \<xsd:pattern value="CUST-\[0-9\]{5}"/\>  
-              \</xsd:restriction\>  
-            \</xsd:simpleType\>  
-          \</xsd:element\>  
-          ...  
-        \</xsd:sequence\>  
-      \</xsd:restriction\>  
-    \</xsd:complexContent\>  
-  \</xsd:complexType\>
-
-* **XdQuantityType**: Represents a physical quantity with a decimal value and units.  
-  **Data Model Schema Example:** This defines a "Systolic Blood Pressure" component. It restricts XdQuantityType, fixes the label, and requires the units to be "mmHg".  
-  \<xsd:complexType name="mc-clj5x2p4k000108l01a2b3c4d"\>  
-    \<xsd:complexContent\>  
-      \<xsd:restriction base="sdc4:XdQuantityType"\>  
-        \<xsd:sequence\>  
-          \<xsd:element name="label" type="xsd:string" fixed="Systolic"/\>  
-          ...  
-          \<xsd:element name="xdquantity-value" type="xsd:decimal"/\>  
-          \<xsd:element name="xdquantity-units"\>  
-            \<xsd:complexType\>  
-              \<xsd:complexContent\>  
-                \<xsd:restriction base="sdc4:XdStringType"\>  
-                  \<xsd:sequence\>  
-                    \<xsd:element name="xdstring-value" type="xsd:string" fixed="mmHg"/\>  
-                  \</xsd:sequence\>  
-                \</xsd:restriction\>  
-              \</xsd:complexContent\>  
-            \</xsd:complexType\>  
-          \</xsd:element\>  
-        \</xsd:sequence\>  
-      \</xsd:restriction\>  
-    \</xsd:complexContent\>  
-  \</xsd:complexType\>
-
-* **XdTemporalType**: A flexible type for representing date and time.  
-  **Data Model Schema Example:** This defines a "Measurement Time" component. It restricts XdTemporalType to allow *only* an xsd:dateTime value, ensuring full temporal precision.  
-  \<xsd:complexType name="mc-clj5x3a9b000208l0e5f6g7h8"\>  
-    \<xsd:complexContent\>  
-      \<xsd:restriction base="sdc4:XdTemporalType"\>  
-        \<xsd:sequence\>  
-          \<xsd:element name="label" type="xsd:string" fixed="Measurement Time"/\>  
-          ...  
-          \<xsd:choice\>  
-            \<xsd:element name="xdtemporal-datetime" type="xsd:dateTime"/\>  
-          \</xsd:choice\>  
-        \</xsd:sequence\>  
-      \</xsd:restriction\>  
-    \</xsd:complexContent\>  
-  \</xsd:complexType\>  
+The same `xsd:restriction` pattern shown above applies to every Xd\* datatype; see A.2 through A.17 for each type's structure and constraints.

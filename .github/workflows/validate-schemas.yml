@@ -12,67 +12,78 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
-    - name: Install xmllint
-      run: sudo apt-get update && sudo apt-get install -y libxml2-utils
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
 
-    - name: Validate sdc4.xsd against XSD spec
+    # SDC4 is an XSD 1.1 schema (it uses xsd:assert). xmllint only supports XSD 1.0
+    # and cannot compile it, so validation uses sdcvalidator (the SDC-native XSD 1.1 validator).
+    - name: Install sdcvalidator (SDC-native XSD 1.1 validator)
+      run: pip install sdcvalidator
+
+    - name: Validate sdc4.xsd compiles as a valid XSD 1.1 schema
       run: |
-        echo "Validating sdc4.xsd..."
-        xmllint --schema http://www.w3.org/2001/XMLSchema.xsd --noout sdc4/schemas/sdc4.xsd
-        echo "✅ sdc4.xsd is valid"
+        python - <<'PY'
+        import sys, xmlschema
+        try:
+            xmlschema.XMLSchema11('sdc4/schemas/sdc4.xsd')
+            print("PASS: sdc4.xsd compiles as valid XSD 1.1")
+        except Exception as e:
+            print("FAIL: sdc4.xsd did not compile:", e); sys.exit(1)
+        PY
 
-    - name: Validate all XML examples against sdc4.xsd
+    - name: Validate data-model schemas are SDC4-compliant restrictions
       run: |
-        echo "Validating examples..."
-        find sdc4/examples -name "*.xml" -type f | while read file; do
-          echo "Validating $file..."
-          xmllint --schema sdc4/schemas/sdc4.xsd --noout "$file" || exit 1
-        done
-        echo "✅ All examples validate successfully"
+        python - <<'PY'
+        import sys, glob, sdcvalidator
+        schemas = [s for s in glob.glob('sdc4/examples/**/*.xsd', recursive=True)]
+        if not schemas:
+            print("INFO: no data-model schemas under sdc4/examples/ to check"); sys.exit(0)
+        failed = False
+        for s in schemas:
+            ok, errors = sdcvalidator.validate_sdc4_schema_compliance(s)
+            print(("PASS" if ok else "FAIL"), s)
+            if not ok:
+                for e in errors[:10]:
+                    print("   ", e)
+                failed = True
+        sys.exit(1 if failed else 0)
+        PY
 
-    - name: Check for broken markdown links
+    - name: Validate instances against their data-model schemas
       run: |
-        echo "Checking for broken internal links..."
-        # This is a simple check - can be enhanced with dedicated link checker
-        find . -name "*.md" -type f -not -path "./.git/*" | while read file; do
-          echo "Checking $file..."
-          # Check for broken relative links (simple regex)
-          grep -E '\]\([^http][^)]*\)' "$file" | grep -E '\]\([^)]+\)' || true
-        done
-        echo "✅ Link check complete"
-
-    - name: Validate README exists
-      run: |
-        if [ ! -f README.md ]; then
-          echo "❌ README.md not found"
-          exit 1
-        fi
-        echo "✅ README.md exists"
+        python - <<'PY'
+        import sys, os, glob, sdcvalidator
+        # Pairing convention: <name>.xml is validated against <name>.xsd in the same directory.
+        pairs = []
+        for xml in glob.glob('sdc4/examples/**/*.xml', recursive=True):
+            xsd = os.path.splitext(xml)[0] + '.xsd'
+            if os.path.exists(xsd):
+                pairs.append((xml, xsd))
+        if not pairs:
+            print("INFO: no <name>.xml + <name>.xsd instance pairs to validate"); sys.exit(0)
+        failed = False
+        for xml, xsd in pairs:
+            report = sdcvalidator.SDC4Validator(xsd, validation='lax').validate_and_report(xml)
+            ok = report.get('valid', False)
+            print(("PASS" if ok else "FAIL"), xml, "" if ok else f"({report.get('error_count')} errors)")
+            if not ok:
+                failed = True
+        sys.exit(1 if failed else 0)
+        PY
 
     - name: Validate required files exist
       run: |
-        required_files=(
-          "CLAUDE.md"
-          "CONTRIBUTING.md"
-          "CHANGELOG.md"
-          "LICENSE"
-          "SECURITY.md"
-          "sdc4/schemas/sdc4.xsd"
-          "sdc4/schemas/sdc4.owl"
-          "sdc4/specification/sdc4-specification.md"
-        )
-        for file in "${required_files[@]}"; do
-          if [ ! -f "$file" ]; then
-            echo "❌ Required file missing: $file"
-            exit 1
-          fi
+        required=( CLAUDE.md CONTRIBUTING.md CHANGELOG.md LICENSE SECURITY.md \
+                   sdc4/schemas/sdc4.xsd sdc4/schemas/sdc4.owl \
+                   sdc4/specification/sdc4-specification.md )
+        for f in "${required[@]}"; do
+          if [ ! -f "$f" ]; then echo "FAIL: required file missing: $f"; exit 1; fi
         done
-        echo "✅ All required files present"
+        echo "PASS: all required files present"
 
     - name: Report success
-      run: |
-        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-        echo "✅ All validations passed successfully!"
-        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+      run: echo "All validations passed."

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Minimal conformant SDC4 instance of the Employment-Record data model
+  (employment-record.xsd, an xsd:restriction of ../schemas/sdc4.xsd).
+
+  It shows the required Data Model governance header (dm-label, dm-language,
+  dm-encoding, instance_id) and the payload node. The payload element name is
+  the model component's own identifier (ms-ablvqv20fp33v8t8c985dlo2), so the
+  node is self-describing: component identity is carried in the element name,
+  not in a generic <data>/<Item> wrapper (see specification section 4.3.1).
+
+  This model's payload cluster admits its data fields as optional Item members
+  (ref="sdc4:Item", minOccurs="0"), so a label-only instance is fully valid.
+  For fully populated, multi-field models see the CordovaOS models/ directory.
+-->
+<sdc4:dm-pm5cks82lnrvyna1xbwpfxic xmlns:sdc4="https://semanticdatacharter.com/ns/sdc4/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <dm-label>Employment Record</dm-label>
+    <dm-language>en-US</dm-language>
+    <dm-encoding>utf-8</dm-encoding>
+    <instance_id>bekc3v8a8m1cbjdsgwf5ites</instance_id>
+    <sdc4:ms-ablvqv20fp33v8t8c985dlo2>
+      <label>Employment Record</label>
+    </sdc4:ms-ablvqv20fp33v8t8c985dlo2>
+</sdc4:dm-pm5cks82lnrvyna1xbwpfxic>
