@@ -1,7 +1,7 @@
 # Semantic Data Charter Reference Model (SDCRM)
 
 ![Version](https://img.shields.io/badge/version-4.0.0-blue)
-![License](https://img.shields.io/badge/license-MIT-green)
+![License](https://img.shields.io/badge/license-Apache--2.0-green)
 ![W3C Standards](https://img.shields.io/badge/W3C-XSD%20|%20RDF%20|%20OWL-orange)
 ![Open Source](https://img.shields.io/badge/open%20source-❤️-ff69b4)
 
@@ -264,24 +264,27 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for complete guidelines.
 
 ## 📄 License
 
-This project is licensed under the **MIT License**.
+This project is licensed under the **Apache License, Version 2.0**.
 
 ```
-MIT License
+Copyright 2025 Axius SDC, Inc.
 
-Copyright (c) 2025 Semantic Data Charter
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+    http://www.apache.org/licenses/LICENSE-2.0
 
 [See LICENSE file for full text]
 ```
 
-All contributions are made under the same MIT license.
+Apache-2.0 rather than a permissive licence without one, because §3 grants
+every implementer an express patent licence from every contributor. A
+reference model is only worth adopting if adopting it is safe, and that
+grant is the part that says so. It is the same licence as the rest of the
+stack: `sdcvalidator`, `sdcgovernance` and `sdcreceipt`.
+
+All contributions are made under the same Apache-2.0 licence.
 
 ---
 
@@ -320,7 +323,7 @@ SDCRM/
 ├── CLAUDE.md             # Architectural guidance for contributors
 ├── CONTRIBUTING.md       # Contribution guidelines
 ├── CHANGELOG.md          # Version history
-├── LICENSE               # MIT License
+├── LICENSE               # Apache License 2.0
 ├── README.md             # This file
 └── SECURITY.md           # Security policy
 ```

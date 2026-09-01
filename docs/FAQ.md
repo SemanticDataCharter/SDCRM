@@ -296,7 +296,7 @@ Yes! New **optional** types can be added in MINOR versions (4.1.0, 4.2.0, etc.):
 
 ### Do I need permission to use SDC4?
 
-No! SDC4 is **MIT licensed** - use freely:
+No! SDC4 is **Apache-2.0 licensed** - use freely:
 - Commercial or non-commercial
 - Modify as needed
 - No attribution required (but appreciated!)

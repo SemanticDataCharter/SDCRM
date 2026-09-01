@@ -387,9 +387,9 @@ Contributors are recognized in:
 
 ## License
 
-MIT License - See LICENSE file for details.
+Apache License 2.0 - See LICENSE file for details.
 
-All contributions are made under the same MIT license.
+All contributions are made under the same Apache-2.0 license.
 
 ---
 
