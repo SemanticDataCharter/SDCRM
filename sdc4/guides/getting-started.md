@@ -326,7 +326,7 @@ print("✅ Valid SDC4 document")
 
 ### SDCStudio (Web Application)
 
-[SDCStudio](https://github.com/AxiusSDC/SDCStudio) provides:
+[SDCStudio](https://sdcstudio.axius-sdc.com) provides:
 - Interactive model creation
 - AI-powered suggestions
 - Multiple export formats (XSD, XML, JSON, RDF, SHACL, GQL)
@@ -412,7 +412,7 @@ print("✅ Valid SDC4 document")
 
 - **Official Website** - https://semanticdatacharter.github.io
 - **GitHub Repository** - https://github.com/SemanticDataCharter/SDCRM
-- **SDCStudio** - https://github.com/AxiusSDC/SDCStudio
+- **SDCStudio** - https://sdcstudio.axius-sdc.com
 - **Obsidian Template** - https://github.com/SemanticDataCharter/SDCObsidianTemplate
 
 ---

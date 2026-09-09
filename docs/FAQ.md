@@ -186,7 +186,7 @@ Use the `links` element:
 
 1. **Read the specification**: [`sdc4/specification/sdc4-specification.md`](../sdc4/specification/sdc4-specification.md)
 2. **Study examples**: [`sdc4/examples/`](../sdc4/examples/)
-3. **Try SDCStudio**: https://github.com/AxiusSDC/SDCStudio
+3. **Try SDCStudio**: https://sdcstudio.axius-sdc.com
 4. **Or create manually**: Use XSD restriction pattern
 
 ### What tools should I use?

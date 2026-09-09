@@ -96,25 +96,43 @@ See [CLAUDE.md](CLAUDE.md) for detailed architectural guidance.
 - **`ROADMAP.md`** - Future direction (SDC5 planning)
 - **`FAQ.md`** - Frequently asked questions
 
-### Tools (`tools/`)
-- **`validators/`** - Python validation scripts for SDC4 compliance
-
 ---
 
 ## 🚀 Quick Start
 
 ### 1. Validate Against SDC4 Schema
 
-```bash
-# Using xmllint
-xmllint --schema sdc4/schemas/sdc4.xsd --noout your-model.xml
+SDC requires an **XSD 1.1** processor. The reference model and generated data models use
+`xsd:assert`, so XSD 1.0 tools such as `xmllint` and `lxml` cannot compile the schema at all.
+Both are libxml2-backed and support XSD 1.0 only.
 
-# Using Python (lxml)
-from lxml import etree
-schema = etree.XMLSchema(etree.parse('sdc4/schemas/sdc4.xsd'))
-doc = etree.parse('your-model.xml')
-schema.assertValid(doc)
+```bash
+pip install sdcvalidator
 ```
+
+```python
+from sdcvalidator import SDC4Validator
+
+# The validator takes your DATA MODEL schema, which restricts the reference
+# model, and validates an instance against it.
+validator = SDC4Validator("your-model.xsd")
+result = validator.validate("your-instance.xml")
+
+print(result.is_valid)              # True
+print(result.structural_errors)     # []
+print(result.semantic_errors)       # []
+```
+
+Verify with the worked example in this repo:
+
+```bash
+cd sdc4/examples
+python -c "from sdcvalidator import SDC4Validator; \
+print(SDC4Validator('employment-record.xsd').validate('employment-record.xml').is_valid)"
+```
+
+Any XSD 1.1 processor works. `sdcvalidator` wraps [`xmlschema`](https://pypi.org/project/xmlschema/),
+which supports 1.1; Saxon and Xerces-J are also 1.1 capable.
 
 ### 2. Create a Data Model
 
@@ -143,7 +161,7 @@ SDC4 uses **XSD restriction** (never extension) to create domain-specific models
 
 ### 3. Use Tools
 
-**[SDCStudio](https://github.com/AxiusSDC/SDCStudio)** - Web application for generating SDC4 models
+**[SDCStudio](https://sdcstudio.axius-sdc.com)** - Web application for generating SDC4 models
 - Interactive UI for creating data models
 - AI-powered component suggestions via RAG
 - Generates XSD, XML, JSON, JSON-LD, RDF, SHACL, GQL
@@ -212,7 +230,7 @@ See [`docs/VERSIONING.md`](docs/VERSIONING.md) for complete versioning strategy.
 
 ## 🤝 Related Projects
 
-- **[SDCStudio](https://github.com/AxiusSDC/SDCStudio)** - Web application for generating SDC4 models (v4.0.0)
+- **[SDCStudio](https://sdcstudio.axius-sdc.com)** - Web application for generating SDC4 models (v4.0.0)
 - **[Obsidian Template](https://github.com/SemanticDataCharter/SDCObsidianTemplate)** - Markdown template for dataset descriptions (v4.0.0)
 - **[Website](https://semanticdatacharter.github.io)** - Documentation and resources
 
@@ -318,7 +336,6 @@ SDCRM/
 │   ├── examples/         # Working examples in multiple languages
 │   └── guides/           # Implementation and usage guides
 ├── docs/                 # Architecture, versioning, roadmap, FAQ
-├── tools/                # Validation scripts and utilities
 ├── .github/              # Issue/PR templates, workflows
 ├── CLAUDE.md             # Architectural guidance for contributors
 ├── CONTRIBUTING.md       # Contribution guidelines

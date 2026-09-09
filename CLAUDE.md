@@ -257,7 +257,7 @@ But it does **not** define the schema. The schema defines itself.
 
 ### SDCStudio
 
-**Repository**: https://github.com/AxiusSDC/SDCStudio
+**Repository**: https://sdcstudio.axius-sdc.com
 
 SDCStudio is a Django application that:
 - **Reads** sdc4.xsd to understand structure
