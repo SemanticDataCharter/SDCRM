@@ -140,10 +140,10 @@ SDC4 uses **XSD restriction** (never extension) to create domain-specific models
 
 ```xml
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns:sdc="http://semanticdatacharter.org/ns/sdc4/">
+           xmlns:sdc="https://semanticdatacharter.com/ns/sdc4/">
 
   <!-- Import SDC4 reference model -->
-  <xs:import namespace="http://semanticdatacharter.org/ns/sdc4/"
+  <xs:import namespace="https://semanticdatacharter.com/ns/sdc4/"
              schemaLocation="sdc4.xsd"/>
 
   <!-- Create your model by restricting SDC4 types -->
@@ -240,7 +240,7 @@ All projects in the SDC4 ecosystem use version `4.x.x` for clear compatibility s
 
 ## 🔗 Namespace and HTTP Resolution
 
-**Namespace URI**: `http://semanticdatacharter.org/ns/sdc4/`
+**Namespace URI**: `https://semanticdatacharter.com/ns/sdc4/`
 
 Schema files are served via HTTP from the website for XML namespace resolution. However:
 

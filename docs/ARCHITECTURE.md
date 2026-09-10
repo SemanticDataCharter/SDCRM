@@ -318,10 +318,10 @@ Domain-specific models created via **XSD restriction**:
 
 ```xml
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns:sdc="http://semanticdatacharter.org/ns/sdc4/">
+           xmlns:sdc="https://semanticdatacharter.com/ns/sdc4/">
 
   <!-- Import SDC4 reference model -->
-  <xs:import namespace="http://semanticdatacharter.org/ns/sdc4/"
+  <xs:import namespace="https://semanticdatacharter.com/ns/sdc4/"
              schemaLocation="sdc4.xsd"/>
 
   <!-- Define domain model by restricting SDC4 types -->
@@ -432,7 +432,7 @@ AuditType
 SDC4 data can be exported to RDF:
 
 ```turtle
-@prefix sdc: <http://semanticdatacharter.org/ns/sdc4/> .
+@prefix sdc: <https://semanticdatacharter.com/ns/sdc4/> .
 @prefix ex: <http://example.org/patient/> .
 
 ex:patient123 a sdc:PatientRecord ;

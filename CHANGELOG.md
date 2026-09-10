@@ -169,7 +169,7 @@ If you have existing SDC-style data models:
 2. Validate your models against `sdc4.xsd`
 3. Use XSD restriction (never extension) for custom models
 4. Add required audit components
-5. Ensure namespace is `http://semanticdatacharter.org/ns/sdc4/`
+5. Ensure namespace is `https://semanticdatacharter.com/ns/sdc4/`
 
 See [migration guide](sdc4/guides/migration-guide.md) for detailed instructions.
 

@@ -352,7 +352,7 @@ See [VERSIONING.md](VERSIONING.md) for complete strategy.
 ### My XML doesn't validate
 
 **Check**:
-1. Namespace correct? `http://semanticdatacharter.org/ns/sdc4/`
+1. Namespace correct? `https://semanticdatacharter.com/ns/sdc4/`
 2. Schema location correct? `sdc4.xsd`
 3. All required elements present? (label, audit, data/magnitude)
 4. Using correct type? `xsi:type="XdStringType"`
@@ -372,9 +372,9 @@ xmllint --schema sdc4/schemas/sdc4.xsd --noout your-file.xml
 **Ensure declarations**:
 ```xml
 <RootElement
-    xmlns="http://semanticdatacharter.org/ns/sdc4/"
+    xmlns="https://semanticdatacharter.com/ns/sdc4/"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://semanticdatacharter.org/ns/sdc4/ sdc4.xsd">
+    xsi:schemaLocation="https://semanticdatacharter.com/ns/sdc4/ sdc4.xsd">
 ```
 
 ### Schema says "must use restriction"

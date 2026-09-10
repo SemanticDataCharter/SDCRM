@@ -102,10 +102,10 @@ SDC5 will be the next **MAJOR** version with breaking changes. This is long-term
 #### Namespace Simplification
 ```xml
 <!-- SDC4 -->
-xmlns:sdc="http://semanticdatacharter.org/ns/sdc4/"
+xmlns:sdc="https://semanticdatacharter.com/ns/sdc4/"
 
 <!-- SDC5 (proposed) -->
-xmlns:sdc="http://semanticdatacharter.org/ns/sdc5/"
+xmlns:sdc="https://semanticdatacharter.com/ns/sdc5/"
 ```
 
 #### Enhanced Composition Patterns

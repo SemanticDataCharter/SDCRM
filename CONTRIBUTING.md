@@ -286,7 +286,7 @@ Use proper syntax highlighting:
 
 ````markdown
 ```xml
-<Example xmlns="http://semanticdatacharter.org/ns/sdc4/">
+<Example xmlns="https://semanticdatacharter.com/ns/sdc4/">
     <!-- Your code here -->
 </Example>
 ```
@@ -338,9 +338,9 @@ When documenting SDC4:
   - Concept 2
   - Concept 3
 -->
-<RootElement xmlns="http://semanticdatacharter.org/ns/sdc4/"
+<RootElement xmlns="https://semanticdatacharter.com/ns/sdc4/"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:schemaLocation="http://semanticdatacharter.org/ns/sdc4/ sdc4.xsd">
+             xsi:schemaLocation="https://semanticdatacharter.com/ns/sdc4/ sdc4.xsd">
 
     <!-- Inline comments explaining choices -->
     <Component xsi:type="XdStringType">

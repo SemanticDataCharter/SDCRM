@@ -44,7 +44,7 @@ Everything else describes its function and usage.
 - **SDCRM Repository**: Source of truth - changes are made here
 - **Website (semanticdatacharter.github.io)**: Serves the namespace for HTTP resolution
 
-The website's `ns/sdc4/` directory contains a **copy** of `sdc4.xsd` that is served at the namespace URI (e.g., `http://semanticdatacharter.com/ns/sdc4/`). This is required for:
+The website's `ns/sdc4/` directory contains a **copy** of `sdc4.xsd` that is served at the namespace URI (e.g., `https://semanticdatacharter.com/ns/sdc4/`). This is required for:
 
 1. **XML Schema namespace resolution** - XML processors fetch schemas via HTTP
 2. **RDF/OWL ontology loading** - Semantic tools resolve namespace URIs
