@@ -10,9 +10,9 @@
 
   This validates against sdc5.xsd
 -->
-<Product xmlns="http://semanticdatacharter.com/ns/sdc5/"
+<Product xmlns="https://semanticdatacharter.com/ns/sdc5/"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://semanticdatacharter.com/ns/sdc5/ sdc5.xsd">
+         xsi:schemaLocation="https://semanticdatacharter.com/ns/sdc5/ sdc5.xsd">
 
     <!-- Instance identity (mandatory since Beale-Sovereignty) -->
     <instance_id>cm7v2x8qk0002jn08p5m7k3v6</instance_id>

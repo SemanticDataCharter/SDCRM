@@ -52,7 +52,7 @@ If documentation conflicts with `sdc5.xsd`, the schema is correct.
 
 ```xml
 <PatientName
-    xmlns="http://semanticdatacharter.com/ns/sdc5/"
+    xmlns="https://semanticdatacharter.com/ns/sdc5/"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:type="XdStringType">
 
@@ -68,7 +68,7 @@ If documentation conflicts with `sdc5.xsd`, the schema is correct.
 
 **Breaking it down**:
 
-1. **Namespace** - `xmlns="http://semanticdatacharter.com/ns/sdc5/"`
+1. **Namespace** - `xmlns="https://semanticdatacharter.com/ns/sdc5/"`
 2. **Type** - `xsi:type="XdStringType"` (text data)
 3. **Label** - Human-readable name
 4. **Data** - The actual value
@@ -254,9 +254,9 @@ Link your data to ontologies:
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <PatientVitalSigns
-    xmlns="http://semanticdatacharter.com/ns/sdc5/"
+    xmlns="https://semanticdatacharter.com/ns/sdc5/"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://semanticdatacharter.com/ns/sdc5/ sdc5.xsd">
+    xsi:schemaLocation="https://semanticdatacharter.com/ns/sdc5/ sdc5.xsd">
 
   <Temperature xsi:type="XdQuantityType">
     <label>Body Temperature</label>
@@ -389,7 +389,7 @@ print("✅ Valid SDC5 document")
 **Fix**: Use correct namespace
 
 ```xml
-<Name xmlns="http://semanticdatacharter.com/ns/sdc5/" ...>
+<Name xmlns="https://semanticdatacharter.com/ns/sdc5/" ...>
 ```
 
 ### ❌ Missing Type Attribute

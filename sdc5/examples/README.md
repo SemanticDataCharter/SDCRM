@@ -80,9 +80,9 @@ Want to contribute an example? Great! Here's how:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<YourElement xmlns="http://semanticdatacharter.com/ns/sdc5/"
+<YourElement xmlns="https://semanticdatacharter.com/ns/sdc5/"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:schemaLocation="http://semanticdatacharter.com/ns/sdc5/ sdc5.xsd">
+             xsi:schemaLocation="https://semanticdatacharter.com/ns/sdc5/ sdc5.xsd">
 
     <!-- Add your SDC5 components here -->
 
