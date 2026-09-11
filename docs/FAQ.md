@@ -186,7 +186,7 @@ Use the `links` element:
 
 1. **Read the specification**: [`sdc4/specification/sdc4-specification.md`](../sdc4/specification/sdc4-specification.md)
 2. **Study examples**: [`sdc4/examples/`](../sdc4/examples/)
-3. **Try SDCStudio**: https://github.com/AxiusSDC/SDCStudio
+3. **Try SDCStudio**: https://sdcstudio.axius-sdc.com
 4. **Or create manually**: Use XSD restriction pattern
 
 ### What tools should I use?
@@ -296,7 +296,7 @@ Yes! New **optional** types can be added in MINOR versions (4.1.0, 4.2.0, etc.):
 
 ### Do I need permission to use SDC4?
 
-No! SDC4 is **MIT licensed** - use freely:
+No! SDC4 is **Apache-2.0 licensed** - use freely:
 - Commercial or non-commercial
 - Modify as needed
 - No attribution required (but appreciated!)
@@ -352,7 +352,7 @@ See [VERSIONING.md](VERSIONING.md) for complete strategy.
 ### My XML doesn't validate
 
 **Check**:
-1. Namespace correct? `http://semanticdatacharter.org/ns/sdc4/`
+1. Namespace correct? `https://semanticdatacharter.com/ns/sdc4/`
 2. Schema location correct? `sdc4.xsd`
 3. All required elements present? (label, audit, data/magnitude)
 4. Using correct type? `xsi:type="XdStringType"`
@@ -372,9 +372,9 @@ xmllint --schema sdc4/schemas/sdc4.xsd --noout your-file.xml
 **Ensure declarations**:
 ```xml
 <RootElement
-    xmlns="http://semanticdatacharter.org/ns/sdc4/"
+    xmlns="https://semanticdatacharter.com/ns/sdc4/"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://semanticdatacharter.org/ns/sdc4/ sdc4.xsd">
+    xsi:schemaLocation="https://semanticdatacharter.com/ns/sdc4/ sdc4.xsd">
 ```
 
 ### Schema says "must use restriction"

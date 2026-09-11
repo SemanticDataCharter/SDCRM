@@ -227,4 +227,4 @@ Before submitting:
 
 ---
 
-**All examples are MIT licensed. Use them freely!**
+**All examples are Apache-2.0 licensed. Use them freely!**

@@ -2,7 +2,7 @@
 
 ![Version](https://img.shields.io/badge/version-4.0.0-blue)
 ![SDC5 Planning](https://img.shields.io/badge/SDC5-planning-teal)
-![License](https://img.shields.io/badge/license-MIT-green)
+![License](https://img.shields.io/badge/license-Apache--2.0-green)
 ![W3C Standards](https://img.shields.io/badge/W3C-XSD%20|%20RDF%20|%20OWL-orange)
 ![Open Source](https://img.shields.io/badge/open%20source-❤️-ff69b4)
 
@@ -101,25 +101,43 @@ See [CLAUDE.md](CLAUDE.md) for detailed architectural guidance.
 - **`ROADMAP.md`** - Future direction (SDC5 planning)
 - **`FAQ.md`** - Frequently asked questions
 
-### Tools (`tools/`)
-- **`validators/`** - Python validation scripts for SDC4 compliance
-
 ---
 
 ## 🚀 Quick Start
 
 ### 1. Validate Against SDC4 Schema
 
-```bash
-# Using xmllint
-xmllint --schema sdc4/schemas/sdc4.xsd --noout your-model.xml
+SDC requires an **XSD 1.1** processor. The reference model and generated data models use
+`xsd:assert`, so XSD 1.0 tools such as `xmllint` and `lxml` cannot compile the schema at all.
+Both are libxml2-backed and support XSD 1.0 only.
 
-# Using Python (lxml)
-from lxml import etree
-schema = etree.XMLSchema(etree.parse('sdc4/schemas/sdc4.xsd'))
-doc = etree.parse('your-model.xml')
-schema.assertValid(doc)
+```bash
+pip install sdcvalidator
 ```
+
+```python
+from sdcvalidator import SDC4Validator
+
+# The validator takes your DATA MODEL schema, which restricts the reference
+# model, and validates an instance against it.
+validator = SDC4Validator("your-model.xsd")
+result = validator.validate("your-instance.xml")
+
+print(result.is_valid)              # True
+print(result.structural_errors)     # []
+print(result.semantic_errors)       # []
+```
+
+Verify with the worked example in this repo:
+
+```bash
+cd sdc4/examples
+python -c "from sdcvalidator import SDC4Validator; \
+print(SDC4Validator('employment-record.xsd').validate('employment-record.xml').is_valid)"
+```
+
+Any XSD 1.1 processor works. `sdcvalidator` wraps [`xmlschema`](https://pypi.org/project/xmlschema/),
+which supports 1.1; Saxon and Xerces-J are also 1.1 capable.
 
 ### 2. Create a Data Model
 
@@ -127,10 +145,10 @@ SDC4 uses **XSD restriction** (never extension) to create domain-specific models
 
 ```xml
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns:sdc="http://semanticdatacharter.org/ns/sdc4/">
+           xmlns:sdc="https://semanticdatacharter.com/ns/sdc4/">
 
   <!-- Import SDC4 reference model -->
-  <xs:import namespace="http://semanticdatacharter.org/ns/sdc4/"
+  <xs:import namespace="https://semanticdatacharter.com/ns/sdc4/"
              schemaLocation="sdc4.xsd"/>
 
   <!-- Create your model by restricting SDC4 types -->
@@ -148,7 +166,7 @@ SDC4 uses **XSD restriction** (never extension) to create domain-specific models
 
 ### 3. Use Tools
 
-**[SDCStudio](https://github.com/AxiusSDC/SDCStudio)** - Web application for generating SDC4 models
+**[SDCStudio](https://sdcstudio.axius-sdc.com)** - Web application for generating SDC4 models
 - Interactive UI for creating data models
 - AI-powered component suggestions via RAG
 - Generates XSD, XML, JSON, JSON-LD, RDF, SHACL, GQL
@@ -217,7 +235,7 @@ See [`docs/VERSIONING.md`](docs/VERSIONING.md) for complete versioning strategy.
 
 ## 🤝 Related Projects
 
-- **[SDCStudio](https://github.com/AxiusSDC/SDCStudio)** - Web application for generating SDC4 models (v4.0.0)
+- **[SDCStudio](https://sdcstudio.axius-sdc.com)** - Web application for generating SDC4 models (v4.0.0)
 - **[Obsidian Template](https://github.com/SemanticDataCharter/SDCObsidianTemplate)** - Markdown template for dataset descriptions (v4.0.0)
 - **[Website](https://semanticdatacharter.github.io)** - Documentation and resources
 
@@ -227,7 +245,7 @@ All projects in the SDC4 ecosystem use version `4.x.x` for clear compatibility s
 
 ## 🔗 Namespace and HTTP Resolution
 
-**Namespace URI**: `http://semanticdatacharter.org/ns/sdc4/`
+**Namespace URI**: `https://semanticdatacharter.com/ns/sdc4/`
 
 Schema files are served via HTTP from the website for XML namespace resolution. However:
 
@@ -269,24 +287,27 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for complete guidelines.
 
 ## 📄 License
 
-This project is licensed under the **MIT License**.
+This project is licensed under the **Apache License, Version 2.0**.
 
 ```
-MIT License
+Copyright 2025 Axius SDC, Inc.
 
-Copyright (c) 2025 Semantic Data Charter
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+    http://www.apache.org/licenses/LICENSE-2.0
 
 [See LICENSE file for full text]
 ```
 
-All contributions are made under the same MIT license.
+Apache-2.0 rather than a permissive licence without one, because §3 grants
+every implementer an express patent licence from every contributor. A
+reference model is only worth adopting if adopting it is safe, and that
+grant is the part that says so. It is the same licence as the rest of the
+stack: `sdcvalidator`, `sdcgovernance` and `sdcreceipt`.
+
+All contributions are made under the same Apache-2.0 licence.
 
 ---
 
@@ -325,12 +346,11 @@ SDCRM/
 │   ├── examples/         # SDC5 examples
 │   └── guides/           # SDC5 implementation guides
 ├── docs/                 # Architecture, versioning, roadmap, FAQ
-├── tools/                # Validation scripts and utilities
 ├── .github/              # Issue/PR templates, workflows
 ├── CLAUDE.md             # Architectural guidance for contributors
 ├── CONTRIBUTING.md       # Contribution guidelines
 ├── CHANGELOG.md          # Version history
-├── LICENSE               # MIT License
+├── LICENSE               # Apache License 2.0
 ├── README.md             # This file
 └── SECURITY.md           # Security policy
 ```

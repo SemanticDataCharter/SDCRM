@@ -25,7 +25,47 @@ The MAJOR version represents the SDC generation (4 = SDC4).
 
 ---
 
-## [4.0.0] - Beale-Sovereignty Update (February 2026)
+## [4.1.0] - 2026-09-09
+
+**The SDC4 reference model is unchanged.** `sdc4/schemas/sdc4.xsd` is byte-identical to
+`v4.0.0`. This is a MINOR release because it adds artifacts alongside the reference model,
+per the versioning rules above. Any instance valid against `v4.0.0` is valid against `v4.1.0`.
+
+### Added
+
+- **BFO 2020 alignment ontology**: `sdc4/schemas/bfo-2020.owl`, `sdc4/schemas/sdc4-bfo.owl`,
+  and `sdc4/schemas/sdc4-bfo.ttl`. Aligns SDC4 to Basic Formal Ontology 2020. Additive only;
+  nothing in the reference model changes.
+- `STANDARDS.md`, enumerating the standards the SDC stack implements.
+- First CI-validated worked example, `sdc4/examples/employment-record`, validated in CI with
+  `sdcvalidator` under XSD 1.1.
+
+### Changed
+
+- **Relicensed from MIT to Apache-2.0** (1 September 2026), matching the rest of the stack and
+  adding the section 3 patent grant. `v4.0.0` and earlier are MIT; `v4.1.0` onward are
+  Apache-2.0.
+- Specification hardening: OASIS-rigor scaffolding (RFC 2119 language, conformance targets,
+  identifiers and resolvability), complete type-family coverage, one authoritative type
+  reference, and the DMType payload corrected to a substitution slot rather than a `data` node.
+- CI now validates schemas and examples with `sdcvalidator` under XSD 1.1.
+
+### Fixed
+
+- **Quick Start could not run.** It documented `xmllint` and `lxml`, both libxml2-backed and
+  XSD 1.0 only, which cannot compile `sdc4.xsd` because it uses `xsd:assert`. Replaced with
+  `sdcvalidator`, with the XSD 1.1 requirement stated explicitly and a runnable verification
+  against the worked example.
+- Removed documentation of a `tools/validators/` directory that does not exist in the
+  repository.
+- Repointed SDCStudio links from `github.com/AxiusSDC/SDCStudio`, an organization that does not
+  exist, to `sdcstudio.axius-sdc.com`.
+
+---
+
+## [4.0.0] - Beale-Sovereignty Update (2026-02-13)
+
+*Released under MIT. The stack relicensed to Apache-2.0 in 4.1.0.*
 
 ### Changed
 
@@ -139,7 +179,7 @@ If you have existing SDC-style data models:
 2. Validate your models against `sdc4.xsd`
 3. Use XSD restriction (never extension) for custom models
 4. Add required audit components
-5. Ensure namespace is `http://semanticdatacharter.org/ns/sdc4/`
+5. Ensure namespace is `https://semanticdatacharter.com/ns/sdc4/`
 
 See [migration guide](sdc4/guides/migration-guide.md) for detailed instructions.
 

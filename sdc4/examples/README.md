@@ -50,4 +50,4 @@ The CI workflow (`.github/workflows/validate-schemas.yml`) confirms `sdc4.xsd` c
 
 ---
 
-Examples are MIT licensed.
+Examples are Apache-2.0 licensed.
