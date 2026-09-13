@@ -410,7 +410,7 @@ print("✅ Valid SDC4 document")
 
 ## Resources
 
-- **Official Website** - https://semanticdatacharter.github.io
+- **Official Website** - https://semanticdatacharter.com
 - **GitHub Repository** - https://github.com/SemanticDataCharter/SDCRM
 - **SDCStudio** - https://sdcstudio.axius-sdc.com
 - **Obsidian Template** - https://github.com/SemanticDataCharter/SDCObsidianTemplate

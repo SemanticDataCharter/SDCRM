@@ -33,7 +33,7 @@ Everything else describes its function and usage.
                    ├──→ Tools (SDCStudio, etc.)     [Implements the schema]
                    │
                    └──→ Website Namespace           [HTTP endpoint for XML namespace]
-                        semanticdatacharter.github.io/ns/sdc4/
+                        https://semanticdatacharter.com/ns/sdc4/
                         Copy of sdc4.xsd served for namespace resolution
 ```
 
@@ -42,7 +42,7 @@ Everything else describes its function and usage.
 **IMPORTANT DISTINCTION**:
 
 - **SDCRM Repository**: Source of truth - changes are made here
-- **Website (semanticdatacharter.github.io)**: Serves the namespace for HTTP resolution
+- **Website repository (`semanticdatacharter.github.io`)**: Serves the namespace for HTTP resolution at `https://semanticdatacharter.com/`
 
 The website's `ns/sdc4/` directory contains a **copy** of `sdc4.xsd` that is served at the namespace URI (e.g., `https://semanticdatacharter.com/ns/sdc4/`). This is required for:
 

@@ -232,7 +232,7 @@ See [`docs/VERSIONING.md`](docs/VERSIONING.md) for complete versioning strategy.
 
 - **[SDCStudio](https://sdcstudio.axius-sdc.com)** - Web application for generating SDC4 models (v4.0.0)
 - **[Obsidian Template](https://github.com/SemanticDataCharter/SDCObsidianTemplate)** - Markdown template for dataset descriptions (v4.0.0)
-- **[Website](https://semanticdatacharter.github.io)** - Documentation and resources
+- **[Website](https://semanticdatacharter.com)** - Documentation and resources
 
 All projects in the SDC4 ecosystem use version `4.x.x` for clear compatibility signaling.
 
@@ -310,7 +310,7 @@ All contributions are made under the same Apache-2.0 licence.
 
 - **GitHub Issues** - [Report bugs or request features](https://github.com/SemanticDataCharter/SDCRM/issues)
 - **GitHub Discussions** - [Ask questions, share ideas](https://github.com/SemanticDataCharter/SDCRM/discussions)
-- **Website** - [Documentation and resources](https://semanticdatacharter.github.io)
+- **Website** - [Documentation and resources](https://semanticdatacharter.com)
 
 ---
 
