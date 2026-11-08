@@ -55,13 +55,9 @@ The following are **not** security issues for this repository:
 
 To report a security vulnerability:
 
-1. **Email**: Send details to `security@example.com` (replace with actual contact)
-   - Subject: `[SECURITY] Brief description`
-   - Include: Detailed description, reproduction steps, impact assessment
-
-2. **GitHub Security Advisory**: Use GitHub's private vulnerability reporting
+Use GitHub's private vulnerability reporting (the only supported route; do not send reports by email):
    - Go to repository → Security tab → Report a vulnerability
-   - Fill out the form with details
+   - Fill out the form with details, including a detailed description, reproduction steps and impact assessment
 
 ### What to Include
 
@@ -238,7 +234,7 @@ We recognize security researchers who responsibly disclose vulnerabilities:
 
 ## Contact
 
-For security issues: `security@example.com` (replace with actual)
+For security issues: GitHub private vulnerability reporting (Security tab → Report a vulnerability)
 
 For non-security issues:
 - **GitHub Issues** - https://github.com/SemanticDataCharter/SDCRM/issues
