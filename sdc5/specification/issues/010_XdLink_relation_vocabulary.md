@@ -5,6 +5,7 @@
 **Affects**: `XdLinkType` (`relation`, `relation-uri`) guidance; published component library
 **Discovered during**: Governed event (logging) mapping, Issue 008
 **Raised by**: T. Cook (RM owner), 2026-11-11
+**GitHub issue**: https://github.com/SemanticDataCharter/SDCRM/issues/14
 
 ## Problem
 

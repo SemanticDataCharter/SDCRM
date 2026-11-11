@@ -5,6 +5,7 @@
 **Affects**: Published component library and modeller guides (no SDC4 RM change); informs the SDC5 AuditType design pass (Issues 001 to 003)
 **Discovered during**: Review of a vendor-neutral security-logging event contract for logging-maturity and GRC work
 **Raised by**: T. Cook (RM owner), 2026-11-11
+**GitHub issue**: https://github.com/SemanticDataCharter/SDCRM/issues/12
 
 ## Problem
 

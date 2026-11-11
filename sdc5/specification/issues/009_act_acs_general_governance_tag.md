@@ -5,6 +5,7 @@
 **Affects**: `XdAnyType/act` and `DMType/acs` documentation; modeller guides
 **Discovered during**: Governed event (logging) mapping, Issue 008
 **Raised by**: T. Cook (RM owner), 2026-11-11
+**GitHub issue**: https://github.com/SemanticDataCharter/SDCRM/issues/13
 
 ## Problem
 
