@@ -15,6 +15,20 @@ The MAJOR version represents the SDC generation (4 = SDC4).
 
 ---
 
+## [Unreleased]
+
+**The SDC4 reference model is unchanged.** This adds a tool alongside it.
+
+### Added
+
+- **Composition model generator**: `tools/composition/generate_composition.py` derives
+  `tools/composition/composition-model.json` from `sdc4/schemas/sdc4.xsd`: each type's role,
+  the leaf set, the containment slots, the leaf families, and the canvas policy a
+  drag-and-drop modeling tool uses to decide which components may be dropped where. Its tests
+  (`tools/composition/tests`) run in CI and fail if the committed JSON no longer matches the
+  schema. Documented in `docs/COMPOSITION-MODEL.md`. Moved from the SDCBench repository; the
+  Bench page in SDCStudio consumes the JSON.
+
 ## [4.1.0] - 2026-09-09
 
 **The SDC4 reference model is unchanged.** `sdc4/schemas/sdc4.xsd` is byte-identical to

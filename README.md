@@ -335,6 +335,8 @@ SDCRM/
 │   ├── specification/    # Complete specification and reference docs
 │   ├── examples/         # Working examples in multiple languages
 │   └── guides/           # Implementation and usage guides
+├── tools/
+│   └── composition/      # Composition model generator, its JSON and tests
 ├── docs/                 # Architecture, versioning, roadmap, FAQ
 ├── .github/              # Issue/PR templates, workflows
 ├── CLAUDE.md             # Architectural guidance for contributors

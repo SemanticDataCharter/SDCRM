@@ -1,0 +1,750 @@
+{
+  "sdc_version": "SDC4",
+  "source": "generated from sdc4.xsd by tools/composition/generate_composition.py — do not hand-edit",
+  "roles": {
+    "ASKRType": "exceptional-value",
+    "ASKUType": "exceptional-value",
+    "AttestationType": "structural",
+    "AuditType": "structural",
+    "ClusterType": "container",
+    "DERType": "exceptional-value",
+    "DMType": "structural",
+    "ExceptionalValueType": "exceptional-value",
+    "INVType": "exceptional-value",
+    "InvlType": "structural",
+    "InvlUnits": "structural",
+    "ItemType": "abstract",
+    "MSKType": "exceptional-value",
+    "NASKType": "exceptional-value",
+    "NAType": "exceptional-value",
+    "NAVType": "exceptional-value",
+    "NINFType": "exceptional-value",
+    "NIType": "exceptional-value",
+    "OTHType": "exceptional-value",
+    "PINFType": "exceptional-value",
+    "ParticipationType": "structural",
+    "PartyType": "structural",
+    "QSType": "exceptional-value",
+    "ReferenceRangeType": "structural",
+    "TRCType": "exceptional-value",
+    "UNCType": "exceptional-value",
+    "UNKType": "exceptional-value",
+    "XdAdapterType": "plumbing",
+    "XdAnyType": "abstract",
+    "XdBooleanListType": "leaf",
+    "XdBooleanType": "leaf",
+    "XdCountType": "leaf",
+    "XdDecimalListType": "leaf",
+    "XdDoubleListType": "leaf",
+    "XdDoubleType": "leaf",
+    "XdFileType": "leaf",
+    "XdFloatType": "leaf",
+    "XdIntegerListType": "leaf",
+    "XdIntervalType": "leaf",
+    "XdLinkType": "leaf",
+    "XdNonNegativeIntegerListType": "leaf",
+    "XdOrderedType": "abstract",
+    "XdOrdinalType": "leaf",
+    "XdPositiveIntegerListType": "leaf",
+    "XdQuantifiedType": "abstract",
+    "XdQuantityType": "leaf",
+    "XdStringListType": "leaf",
+    "XdStringType": "leaf",
+    "XdTemporalType": "leaf",
+    "XdTokenListType": "leaf",
+    "XdTokenType": "leaf"
+  },
+  "agent_selectable": [
+    "ClusterType",
+    "XdBooleanListType",
+    "XdBooleanType",
+    "XdCountType",
+    "XdDecimalListType",
+    "XdDoubleListType",
+    "XdDoubleType",
+    "XdFileType",
+    "XdFloatType",
+    "XdIntegerListType",
+    "XdIntervalType",
+    "XdLinkType",
+    "XdNonNegativeIntegerListType",
+    "XdOrdinalType",
+    "XdPositiveIntegerListType",
+    "XdQuantityType",
+    "XdStringListType",
+    "XdStringType",
+    "XdTemporalType",
+    "XdTokenListType",
+    "XdTokenType"
+  ],
+  "leaves": [
+    "XdBooleanListType",
+    "XdBooleanType",
+    "XdCountType",
+    "XdDecimalListType",
+    "XdDoubleListType",
+    "XdDoubleType",
+    "XdFileType",
+    "XdFloatType",
+    "XdIntegerListType",
+    "XdIntervalType",
+    "XdLinkType",
+    "XdNonNegativeIntegerListType",
+    "XdOrdinalType",
+    "XdPositiveIntegerListType",
+    "XdQuantityType",
+    "XdStringListType",
+    "XdStringType",
+    "XdTemporalType",
+    "XdTokenListType",
+    "XdTokenType"
+  ],
+  "item_members": [
+    "ClusterType",
+    "XdAdapterType"
+  ],
+  "containment": {
+    "DMType": [
+      {
+        "slot": "dm-label",
+        "card": "1..1",
+        "kind": "config",
+        "accepts": []
+      },
+      {
+        "slot": "dm-language",
+        "card": "1..1",
+        "kind": "config",
+        "accepts": []
+      },
+      {
+        "slot": "dm-encoding",
+        "card": "1..1",
+        "kind": "config",
+        "accepts": []
+      },
+      {
+        "slot": "creation_timestamp",
+        "card": "0..1",
+        "kind": "config",
+        "accepts": []
+      },
+      {
+        "slot": "instance_id",
+        "card": "1..1",
+        "kind": "config",
+        "accepts": []
+      },
+      {
+        "slot": "instance_version",
+        "card": "0..1",
+        "kind": "config",
+        "accepts": []
+      },
+      {
+        "slot": "source_instance_id",
+        "card": "0..1",
+        "kind": "config",
+        "accepts": []
+      },
+      {
+        "slot": "source_version_id",
+        "card": "0..1",
+        "kind": "config",
+        "accepts": []
+      },
+      {
+        "slot": "current-state",
+        "card": "0..1",
+        "kind": "config",
+        "accepts": []
+      },
+      {
+        "slot": "Item",
+        "card": "1..1",
+        "kind": "composition",
+        "accepts": [
+          "ClusterType",
+          "XdAdapterType"
+        ]
+      },
+      {
+        "slot": "subject",
+        "card": "0..1",
+        "kind": "composition",
+        "accepts": [
+          "PartyType"
+        ]
+      },
+      {
+        "slot": "provider",
+        "card": "0..unbounded",
+        "kind": "composition",
+        "accepts": [
+          "PartyType"
+        ]
+      },
+      {
+        "slot": "Participation",
+        "card": "0..unbounded",
+        "kind": "composition",
+        "accepts": [
+          "ParticipationType"
+        ]
+      },
+      {
+        "slot": "protocol",
+        "card": "0..1",
+        "kind": "composition",
+        "accepts": [
+          "XdStringType"
+        ]
+      },
+      {
+        "slot": "workflow",
+        "card": "0..1",
+        "kind": "composition",
+        "accepts": [
+          "ClusterType"
+        ]
+      },
+      {
+        "slot": "acs",
+        "card": "0..1",
+        "kind": "composition",
+        "accepts": [
+          "XdLinkType"
+        ]
+      },
+      {
+        "slot": "Audit",
+        "card": "0..unbounded",
+        "kind": "composition",
+        "accepts": [
+          "AuditType"
+        ]
+      },
+      {
+        "slot": "attestation",
+        "card": "0..1",
+        "kind": "composition",
+        "accepts": [
+          "AttestationType"
+        ]
+      },
+      {
+        "slot": "XdLink",
+        "card": "0..unbounded",
+        "kind": "composition",
+        "accepts": [
+          "XdLinkType"
+        ]
+      }
+    ],
+    "ClusterType": [
+      {
+        "slot": "label",
+        "card": "0..1",
+        "kind": "config",
+        "accepts": []
+      },
+      {
+        "slot": "Item",
+        "card": "0..unbounded",
+        "kind": "composition",
+        "accepts": [
+          "ClusterType",
+          "XdAdapterType"
+        ]
+      }
+    ],
+    "XdAdapterType": [
+      {
+        "slot": "XdAdapter-value",
+        "card": "0..unbounded",
+        "kind": "composition",
+        "accepts": [
+          "XdBooleanListType",
+          "XdBooleanType",
+          "XdCountType",
+          "XdDecimalListType",
+          "XdDoubleListType",
+          "XdDoubleType",
+          "XdFileType",
+          "XdFloatType",
+          "XdIntegerListType",
+          "XdIntervalType",
+          "XdLinkType",
+          "XdNonNegativeIntegerListType",
+          "XdOrdinalType",
+          "XdPositiveIntegerListType",
+          "XdQuantityType",
+          "XdStringListType",
+          "XdStringType",
+          "XdTemporalType",
+          "XdTokenListType",
+          "XdTokenType"
+        ]
+      }
+    ]
+  },
+  "canvas": {
+    "policy": true,
+    "note": "The subset the drag-and-drop tool exposes. RM facts above are computed; this scoping is the Bench's product choice.",
+    "node_kinds": {
+      "Model": {
+        "rm_type": "DMType",
+        "label": "Model",
+        "root_slot": "Item",
+        "root_accepts_canvas": [
+          "Group"
+        ],
+        "note": "A model's root is a Group in the common case."
+      },
+      "Group": {
+        "rm_type": "ClusterType",
+        "label": "Group",
+        "accepts_canvas": [
+          "Group",
+          "Field"
+        ],
+        "card_per_child": "0..unbounded"
+      },
+      "Field": {
+        "rm_types": [
+          "XdBooleanListType",
+          "XdBooleanType",
+          "XdCountType",
+          "XdDecimalListType",
+          "XdDoubleListType",
+          "XdDoubleType",
+          "XdFileType",
+          "XdFloatType",
+          "XdIntegerListType",
+          "XdIntervalType",
+          "XdLinkType",
+          "XdNonNegativeIntegerListType",
+          "XdOrdinalType",
+          "XdPositiveIntegerListType",
+          "XdQuantityType",
+          "XdStringListType",
+          "XdStringType",
+          "XdTemporalType",
+          "XdTokenListType",
+          "XdTokenType"
+        ],
+        "label": "Field",
+        "terminal": true,
+        "auto_wrap": "XdAdapterType",
+        "note": "A Field is a leaf Xd type; dropping it into a Group auto-creates the (invisible) XdAdapter wrapper.",
+        "type_badges": {
+          "XdBooleanListType": "List (Boolean)",
+          "XdBooleanType": "Boolean",
+          "XdCountType": "Integer",
+          "XdDecimalListType": "List (Decimal)",
+          "XdDoubleListType": "List (Decimal)",
+          "XdDoubleType": "Decimal",
+          "XdFileType": "File",
+          "XdFloatType": "Decimal",
+          "XdIntegerListType": "List (Integer)",
+          "XdIntervalType": "Range",
+          "XdLinkType": "Link",
+          "XdNonNegativeIntegerListType": "List (Integer)",
+          "XdOrdinalType": "Ranked",
+          "XdPositiveIntegerListType": "List (Integer)",
+          "XdQuantityType": "Decimal",
+          "XdStringListType": "List (Text)",
+          "XdStringType": "Text",
+          "XdTemporalType": "Date / time",
+          "XdTokenListType": "List (Code)",
+          "XdTokenType": "Code"
+        }
+      }
+    },
+    "api_type_badges": {
+      "xdbooleanlist": "List (Boolean)",
+      "xdboolean": "Boolean",
+      "xdcount": "Integer",
+      "xddecimallist": "List (Decimal)",
+      "xddoublelist": "List (Decimal)",
+      "xddouble": "Decimal",
+      "xdfile": "File",
+      "xdfloat": "Decimal",
+      "xdintegerlist": "List (Integer)",
+      "interval": "Range",
+      "xdlink": "Link",
+      "xdnonnegativeintegerlist": "List (Integer)",
+      "xdordinal": "Ranked",
+      "xdpositiveintegerlist": "List (Integer)",
+      "xdquantity": "Decimal",
+      "xdstringlist": "List (Text)",
+      "xdstring": "Text",
+      "xdtemporal": "Date / time",
+      "xdtokenlist": "List (Code)",
+      "xdtoken": "Code",
+      "cluster": "Group"
+    },
+    "cluster_member_api_types": [
+      "cluster",
+      "xdboolean",
+      "xdbooleanlist",
+      "xdcount",
+      "xddecimallist",
+      "xddouble",
+      "xddoublelist",
+      "xdfile",
+      "xdfloat",
+      "xdintegerlist",
+      "xdlink",
+      "xdnonnegativeintegerlist",
+      "xdordinal",
+      "xdpositiveintegerlist",
+      "xdquantity",
+      "xdstring",
+      "xdstringlist",
+      "xdtemporal",
+      "xdtoken",
+      "xdtokenlist"
+    ],
+    "drop_rules": [
+      "A Group accepts Groups and Fields (0..unbounded each).",
+      "A Model's root accepts exactly one Group (1..1).",
+      "A Field is terminal on the canvas (its internal config is edited in the Field's own panel, not by dropping).",
+      "Leaf dropped into a Group is auto-wrapped in XdAdapter; the user never sees XdAdapter.",
+      "Types whose role is structural / abstract / plumbing / exceptional-value are never palette items and never droppable.",
+      "This is the affordance layer only — the SDCStudio publish/validate API is the authoritative validity gate."
+    ],
+    "out_of_scope": {
+      "note": "Held out of the canvas (done in the SDCStudio UI). Not palette items.",
+      "dm_structural_slots": [
+        "subject",
+        "provider",
+        "Participation",
+        "workflow",
+        "acs",
+        "Audit",
+        "attestation"
+      ],
+      "structural_types": [
+        "AttestationType",
+        "AuditType",
+        "DMType",
+        "InvlType",
+        "InvlUnits",
+        "ParticipationType",
+        "PartyType",
+        "ReferenceRangeType"
+      ],
+      "exceptional_values": "ISO 21090 null-flavors (data/validation layer)"
+    }
+  },
+  "families": {
+    "Group": {
+      "rm_base": "ClusterType",
+      "label": "Group",
+      "color": "#475569",
+      "members": []
+    },
+    "Entry": {
+      "rm_base": "XdAnyType",
+      "label": "Entry",
+      "color": "#2563eb",
+      "members": [
+        "XdBooleanListType",
+        "XdBooleanType",
+        "XdFileType",
+        "XdIntervalType",
+        "XdLinkType",
+        "XdStringListType",
+        "XdStringType",
+        "XdTokenListType",
+        "XdTokenType"
+      ]
+    },
+    "Ordered": {
+      "rm_base": "XdOrderedType",
+      "label": "Ordered",
+      "color": "#0d9488",
+      "members": [
+        "XdOrdinalType",
+        "XdTemporalType"
+      ]
+    },
+    "Quantified": {
+      "rm_base": "XdQuantifiedType",
+      "label": "Quantified",
+      "color": "#d97706",
+      "members": [
+        "XdCountType",
+        "XdDecimalListType",
+        "XdDoubleListType",
+        "XdDoubleType",
+        "XdFloatType",
+        "XdIntegerListType",
+        "XdNonNegativeIntegerListType",
+        "XdPositiveIntegerListType",
+        "XdQuantityType"
+      ]
+    }
+  },
+  "question_groups": {
+    "xdany": [
+      {
+        "id": "label",
+        "prompt": "Name this in your own words.",
+        "tier": 1,
+        "owner": "researcher",
+        "binds_to": [
+          "label"
+        ]
+      },
+      {
+        "id": "description",
+        "prompt": "Describe what this is, what a normal or expected value looks like, and cite any guideline or protocol that defines it.",
+        "tier": 1,
+        "owner": "researcher",
+        "binds_to": [
+          "description"
+        ]
+      },
+      {
+        "id": "context",
+        "tier": 3,
+        "owner": "practitioner",
+        "binds_to": [
+          "require_*",
+          "allow_*",
+          "act_class"
+        ],
+        "note": "valid-time / time-recorded / modified / location / access tags"
+      },
+      {
+        "id": "ui",
+        "tier": 3,
+        "owner": "auto",
+        "binds_to": [
+          "ui_type"
+        ],
+        "note": "preferred rendering"
+      }
+    ],
+    "xdordered": [
+      {
+        "id": "normal_range",
+        "prompt": "What counts as a normal or expected range?",
+        "tier": 1,
+        "owner": "researcher",
+        "binds_to": [
+          "normal_status",
+          "reference_ranges"
+        ]
+      }
+    ],
+    "xdquantified": [
+      {
+        "id": "units",
+        "prompt": "What is the unit?",
+        "tier": 1,
+        "owner": "researcher",
+        "binds_to": [
+          "units"
+        ],
+        "note": "reuse an existing Units component before minting"
+      },
+      {
+        "id": "range",
+        "prompt": "Lowest and highest value that makes sense?",
+        "tier": 1,
+        "owner": "researcher",
+        "binds_to": [
+          "min_inclusive",
+          "max_inclusive"
+        ]
+      },
+      {
+        "id": "precision",
+        "prompt": "Decimal places",
+        "tier": 2,
+        "owner": "auto",
+        "binds_to": [
+          "fraction_digits",
+          "total_digits"
+        ]
+      },
+      {
+        "id": "magnitude_status",
+        "tier": 3,
+        "owner": "practitioner",
+        "binds_to": [
+          "require_*",
+          "allow_*"
+        ],
+        "note": "status / error / accuracy"
+      },
+      {
+        "id": "leaf_discriminator",
+        "tier": 3,
+        "owner": "auto",
+        "note": "integer->Count, decimal->Quantity, float/double->Float/Double; from the data"
+      }
+    ],
+    "xdordinal": [
+      {
+        "id": "levels",
+        "prompt": "List the values in order, lowest to highest.",
+        "tier": 1,
+        "owner": "researcher",
+        "binds_to": [
+          "ordinals",
+          "symbols"
+        ]
+      },
+      {
+        "id": "level_ids",
+        "tier": 3,
+        "owner": "practitioner",
+        "binds_to": [
+          "annotations"
+        ],
+        "note": "identity URI per level"
+      }
+    ],
+    "xdtemporal": [
+      {
+        "id": "precision_set",
+        "prompt": "What precision can this carry? (full date, year-month, year, time, datetime, duration)",
+        "tier": 1,
+        "owner": "researcher",
+        "binds_to": [
+          "allow_date",
+          "allow_year_month",
+          "allow_year",
+          "allow_time",
+          "allow_datetime",
+          "allow_duration"
+        ]
+      }
+    ],
+    "xdstring": [
+      {
+        "id": "allowed_values",
+        "prompt": "Is this a fixed list of values? If so, list them.",
+        "tier": 1,
+        "owner": "researcher",
+        "binds_to": [
+          "enums",
+          "enum_descr"
+        ]
+      },
+      {
+        "id": "length",
+        "prompt": "How long can the text be?",
+        "tier": 2,
+        "owner": "auto",
+        "binds_to": [
+          "min_length",
+          "max_length",
+          "exact_length"
+        ]
+      },
+      {
+        "id": "format",
+        "prompt": "Any required format or pattern?",
+        "tier": 2,
+        "owner": "researcher",
+        "binds_to": [
+          "str_fmt"
+        ]
+      },
+      {
+        "id": "default",
+        "prompt": "Is there a default value?",
+        "tier": 2,
+        "owner": "researcher",
+        "binds_to": [
+          "def_val"
+        ]
+      }
+    ],
+    "xdtoken": [
+      {
+        "id": "codes",
+        "prompt": "List the codes, and name the code system if you know it.",
+        "tier": 1,
+        "owner": "researcher",
+        "binds_to": [
+          "enums",
+          "enum_descr"
+        ]
+      },
+      {
+        "id": "language",
+        "prompt": "What language are the codes in?",
+        "tier": 2,
+        "owner": "researcher",
+        "binds_to": [
+          "language"
+        ]
+      }
+    ],
+    "xdboolean": [
+      {
+        "id": "representations",
+        "prompt": "How are yes and no written in your data? (e.g. Y/N, true/false)",
+        "tier": 2,
+        "owner": "researcher",
+        "binds_to": [
+          "trues",
+          "falses"
+        ]
+      }
+    ],
+    "xdlink": [
+      {
+        "id": "relationship",
+        "prompt": "What is the relationship to the thing it points to?",
+        "tier": 1,
+        "owner": "researcher",
+        "binds_to": [
+          "relation"
+        ]
+      }
+    ],
+    "xdfile": [
+      {
+        "id": "kind",
+        "prompt": "What kind of file, and is it embedded or linked?",
+        "tier": 1,
+        "owner": "researcher",
+        "binds_to": [
+          "media_type",
+          "content_mode"
+        ]
+      },
+      {
+        "id": "meta",
+        "prompt": "Encoding, language, or alternate text?",
+        "tier": 2,
+        "owner": "researcher",
+        "binds_to": [
+          "encoding",
+          "language",
+          "alt_txt"
+        ]
+      }
+    ],
+    "xdinterval": [
+      {
+        "id": "bounds",
+        "tier": 3,
+        "owner": "practitioner",
+        "binds_to": [
+          "lower",
+          "upper",
+          "interval_type"
+        ],
+        "note": "not a standalone bench Field; a building block of a ReferenceRange"
+      }
+    ]
+  }
+}

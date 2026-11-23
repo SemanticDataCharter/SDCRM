@@ -88,5 +88,11 @@ jobs:
         done
         echo "PASS: all required files present"
 
+    - name: Composition model matches sdc4.xsd
+      run: |
+        pip install pytest
+        python tools/composition/generate_composition.py --out /tmp/composition-model.json
+        python -m pytest -q tools/composition/tests
+
     - name: Report success
       run: echo "All validations passed."
